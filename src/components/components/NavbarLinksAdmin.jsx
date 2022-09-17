@@ -4,7 +4,6 @@ import {
   Button,
   Flex,
   Icon,
-  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -14,13 +13,13 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 // Custom Components
-import { ItemContent } from "../components/ItemContent";
-import { SidebarResponsive } from "../components/sidebar/Sidebar";
+import { ItemContent } from "./ItemContent";
+import { SidebarResponsive } from "./sidebar/Sidebar";
 import PropTypes from "prop-types";
 import React from "react";
 // Assets
 
-import { MdNotificationsNone, MdInfoOutline } from "react-icons/md";
+import { MdNotificationsNone } from "react-icons/md";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import { FaEthereum } from "react-icons/fa";
 // import routes from "routes.js";
@@ -40,7 +39,6 @@ export default function HeaderLinks(props) {
     "14px 17px 40px 4px rgba(112, 144, 176, 0.18)",
     "14px 17px 40px 4px rgba(112, 144, 176, 0.06)"
   );
-  const borderButton = useColorModeValue("secondaryGray.500", "whiteAlpha.200");
   return (
     <Flex
       w={{ sm: "100%", md: "auto" }}
@@ -141,63 +139,6 @@ export default function HeaderLinks(props) {
           </Flex>
         </MenuList>
       </Menu>
-
-      <Menu>
-        <MenuButton p='0px'>
-          <Icon
-            mt='6px'
-            as={MdInfoOutline}
-            color={navbarIcon}
-            w='18px'
-            h='18px'
-            me='10px'
-          />
-        </MenuButton>
-        <MenuList
-          boxShadow={shadow}
-          p='20px'
-          me={{ base: "30px", md: "unset" }}
-          borderRadius='20px'
-          bg={menuBg}
-          border='none'
-          mt='22px'
-          minW={{ base: "unset" }}
-          maxW={{ base: "360px", md: "unset" }}>
-          <Flex flexDirection='column'>
-            <Link w='100%' href='https://horizon-ui.com/pro'>
-              <Button w='100%' h='44px' mb='10px' variant='brand'>
-                Buy Horizon UI PRO
-              </Button>
-            </Link>
-            <Link
-              w='100%'
-              href='https://horizon-ui.com/documentation/docs/introduction'>
-              <Button
-                w='100%'
-                h='44px'
-                mb='10px'
-                border='1px solid'
-                bg='transparent'
-                borderColor={borderButton}>
-                See Documentation
-              </Button>
-            </Link>
-            <Link
-              w='100%'
-              href='https://github.com/horizon-ui/horizon-ui-chakra'>
-              <Button
-                w='100%'
-                h='44px'
-                variant='no-hover'
-                color={textColor}
-                bg='transparent'>
-                Try Horizon Free
-              </Button>
-            </Link>
-          </Flex>
-        </MenuList>
-      </Menu>
-
       <Button
         variant='no-hover'
         bg='transparent'

@@ -13,7 +13,7 @@ import {
   DrawerContent,
   DrawerHeader,
 } from "@chakra-ui/react";
-import Content from "../sidebar/components/Content";
+import Content from "./components/Content";
 
 
 // Assets

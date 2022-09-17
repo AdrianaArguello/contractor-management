@@ -1,7 +1,6 @@
 import { Box, Flex, Stack, Text, Divider } from "@chakra-ui/react";
 //   Custom components
-import Brand from "../components/Brand";
-import SidebarCard from "../components/SidebarCard";
+import SidebarCard from "./SidebarCard";
 import React from "react";
 
 // FUNCTIONS

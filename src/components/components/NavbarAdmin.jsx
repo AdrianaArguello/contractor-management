@@ -7,11 +7,12 @@ import {
   Flex,
   Link,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
+import { ChevronRightIcon } from '@chakra-ui/icons'
 import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
-import AdminNavbarLinks from "../components/NavbarLinksAdmin";
+import AdminNavbarLinks from "./NavbarLinksAdmin";
 
 export default function AdminNavbar(props) {
   const [scrolled, setScrolled] = useState(false);
@@ -24,7 +25,7 @@ export default function AdminNavbar(props) {
     };
   });
 
-  const { secondary, message } = props;
+  const { secondary, message, brandText } = props;
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   let mainText = useColorModeValue("navy.700", "white");
@@ -100,19 +101,17 @@ export default function AdminNavbar(props) {
         alignItems={{ xl: "center" }}
         mb={gap}>
         <Box mb={{ sm: "8px", md: "0px" }}>
-          <Breadcrumb>
-            <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-              <BreadcrumbLink href='#' color={secondaryText}>
-                Pages
-              </BreadcrumbLink>
-            </BreadcrumbItem>
+        <Breadcrumb spacing='8px' separator={<ChevronRightIcon color='gray.500' />}>
+        <BreadcrumbItem>
+          <BreadcrumbLink href='#'>pages</BreadcrumbLink>
+        </BreadcrumbItem>
 
-            <BreadcrumbItem color={secondaryText} fontSize='sm'>
-              <BreadcrumbLink href='#' color={secondaryText}>
-                Admin
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
+        <BreadcrumbItem color={secondaryText} fontSize='sm' isCurrentPage>
+          <BreadcrumbLink href='#' color={secondaryText}>
+            {brandText}
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+      </Breadcrumb>
           {/* Here we create navbar brand, based on route name */}
           <Link
             color={mainText}
@@ -155,3 +154,4 @@ AdminNavbar.propTypes = {
   fixed: PropTypes.bool,
   onOpen: PropTypes.func,
 };
+

@@ -11,11 +11,12 @@ import {
   import React, { useState } from "react";
   import NavbarAdmin from "../../components/components/NavbarAdmin";
   import Footer from "../../components/components/footer/FooterAdmin";
-  import General from "../../components/components/General"
-  import Banner from "../../components/components/Banner"
-  import banner from '../../assets/auth/banner.png'
-  import avatar from "../../assets/auth/principal-image.jpg"
-  import ComplexTable from "../../components/components/ComplexTable"
+  import General from "../../components/components/General";
+  import Banner from "../../components/components/Banner";
+  import banner from '../../assets/auth/banner.png';
+  import avatar from "../../assets/auth/principal-image.jpg";
+  import ComplexTable from "../../components/components/ComplexTable";
+
   export default function AdminDashboard() {
     const [toggleSidebar, setToggleSidebar] = useState(false);
     const textColor = useColorModeValue("navy.700", "white");
@@ -103,7 +104,6 @@ import {
         </Box>
       </SidebarContext.Provider>
     </Box>
-       
       </>
     );
   }

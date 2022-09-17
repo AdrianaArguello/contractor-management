@@ -9,7 +9,7 @@ import {
   TableContainer,
 } from '@chakra-ui/react'
 import React from "react";
-import Card from "../components/Card"
+import Card from "./Card"
 
 export default function ColumnsTable(props) {
 

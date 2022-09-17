@@ -28,6 +28,7 @@ function SignIn() {
   const brandStars = useColorModeValue("brand.500", "brand.400");
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+
   return (
     <AuthLayout illustrationBackground={illustration} image={illustration}>
       <Flex
@@ -44,7 +45,7 @@ function SignIn() {
         flexDirection='column'>
         <Box me='auto'>
           <Heading color={textColor} fontSize='36px' mb='10px'>
-            Sign In
+            Iniciar sesión
           </Heading>
           <Text
             mb='36px'
@@ -52,7 +53,7 @@ function SignIn() {
             color={textColorSecondary}
             fontWeight='400'
             fontSize='md'>
-            Enter your email and password to sign in!
+            Introduce tu correo electrónico y tu contraseña para iniciar sesión!
           </Text>
         </Box>
         <Flex
@@ -73,7 +74,7 @@ function SignIn() {
               fontWeight='500'
               color={textColor}
               mb='8px'>
-              Email<Text color={brandStars}>*</Text>
+              Correo<Text color={brandStars}>*</Text>
             </FormLabel>
             <Input
               isRequired={true}
@@ -92,7 +93,7 @@ function SignIn() {
               fontWeight='500'
               color={textColor}
               display='flex'>
-              Password<Text color={brandStars}>*</Text>
+              Contraseña<Text color={brandStars}>*</Text>
             </FormLabel>
             <InputGroup size='md'>
               <Input
@@ -120,7 +121,7 @@ function SignIn() {
               w='100%'
               h='50'
               mb='24px'>
-              Sign In
+              Iniciar sesión
             </Button>
           </FormControl>
         </Flex>
