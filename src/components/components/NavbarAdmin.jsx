@@ -25,7 +25,7 @@ export default function AdminNavbar(props) {
     };
   });
 
-  const { secondary, message, brandText } = props;
+  const { secondary, message, brandText, logoText } = props;
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   let mainText = useColorModeValue("navy.700", "white");
@@ -106,8 +106,8 @@ export default function AdminNavbar(props) {
           <BreadcrumbLink href='#'>pages</BreadcrumbLink>
         </BreadcrumbItem>
 
-        <BreadcrumbItem color={secondaryText} fontSize='sm' isCurrentPage>
-          <BreadcrumbLink href='#' color={secondaryText}>
+        <BreadcrumbItem color={secondaryText} fontSize='sm'>
+          <BreadcrumbLink color={secondaryText} isCurrentPage>
             {brandText}
           </BreadcrumbLink>
         </BreadcrumbItem>
@@ -129,7 +129,7 @@ export default function AdminNavbar(props) {
             _focus={{
               boxShadow: "none",
             }}>
-            ELCA Telecomunicaciones
+            {logoText}
           </Link>
         </Box>
         <Box ms='auto' w={{ sm: "100%", md: "unset" }}>

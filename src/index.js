@@ -11,6 +11,8 @@ import Profile from './views/profile/Profile';
 import { ThemeEditorProvider } from "@hypertheme-editor/chakra-ui";
 import RegisterContractors from './views/auth/register/RegisterContractors';
 import RegisterEmployee from './views/auth/register/RegisterEmployee';
+import AdminDashboardEmployee from './views/dashboard/admin/AdminEmployee';
+import Reports from './views/reports/Reports';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -25,6 +27,8 @@ root.render(
               <Route path="/profile" element={<Profile/>} />
               <Route path="/registerContractor" element={<RegisterContractors/>} />
               <Route path="/registerEmployee" element={<RegisterEmployee/>} />
+              <Route path="/adminEmployee" element={<AdminDashboardEmployee/>} />
+              <Route path="/reports" element={<Reports/>} />
             </Routes>
           </BrowserRouter>
       </ThemeEditorProvider>

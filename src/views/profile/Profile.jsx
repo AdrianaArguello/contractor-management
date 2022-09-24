@@ -16,10 +16,36 @@ import {
   import banner from '../../assets/auth/banner.png';
   import avatar from "../../assets/auth/principal-image.jpg";
   import ComplexTable from "../../components/components/ComplexTable";
+  import routes from "../../routes";
 
   export default function AdminDashboard() {
     const [toggleSidebar, setToggleSidebar] = useState(false);
     const textColor = useColorModeValue("navy.700", "white");
+
+
+    const getActiveRoute = (routes) => {
+      let activeRoute = "Perfil";
+      for (let i = 0; i < routes.length; i++) {
+        if (routes[i].collapse) {
+          let collapseActiveRoute = getActiveRoute(routes[i].items);
+          if (collapseActiveRoute !== activeRoute) {
+            return collapseActiveRoute;
+          }
+        } else if (routes[i].category) {
+          let categoryActiveRoute = getActiveRoute(routes[i].items);
+          if (categoryActiveRoute !== activeRoute) {
+            return categoryActiveRoute;
+          }
+        } else {
+          if (
+            window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
+          ) {
+            return routes[i].name;
+          }
+        }
+      }
+      return activeRoute;
+    };
 
     return (
       <>
@@ -45,7 +71,10 @@ import {
           transitionTimingFunction='linear, linear, ease'>
           <Portal>
             <Box>
-              <NavbarAdmin/>
+              <NavbarAdmin
+                logoText={"Perfil"}
+                brandText={getActiveRoute(routes)}
+              />
             </Box>
           </Portal>
             <Box
