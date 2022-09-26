@@ -13,6 +13,7 @@ import RegisterContractors from './views/auth/register/RegisterContractors';
 import RegisterEmployee from './views/auth/register/RegisterEmployee';
 import AdminDashboardEmployee from './views/dashboard/admin/AdminEmployee';
 import Reports from './views/reports/Reports';
+import Landing from './views/landing/landing';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -22,7 +23,8 @@ root.render(
       <ThemeEditorProvider>
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<SignIn />} />
+              <Route path="/" element={<Landing />} />
+              <Route path="/signin" element={<SignIn />} />
               <Route path="/admin" element={<AdminDashboard/>} />
               <Route path="/profile" element={<Profile/>} />
               <Route path="/registerContractor" element={<RegisterContractors/>} />

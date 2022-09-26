@@ -6,3 +6,17 @@ body {
 option {
   color: black;
 }
+
+.box{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner{
+  width: 50%;
+  height: 100vh;
+  border-bottom-right-radius: 50%;
+  border-bottom-left-radius: 50%;
+}
+
