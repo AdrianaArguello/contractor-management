@@ -11,7 +11,8 @@ import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 
 export default function NavbarLanding() {
   const { colorMode, toggleColorMode } = useColorMode();
-  let mainText = useColorModeValue("gray.500", "white");
+  let mainText = useColorModeValue("#3f51b5", "white");
+  let buttonLogin = useColorModeValue("#3f51b5", "navy.800");
 
   return (
     <>
@@ -32,7 +33,8 @@ export default function NavbarLanding() {
               _focus={{
                 boxShadow: "none",
               }}>
-              Elca Telecomunicaciones
+              Elca
+               {/* Telecomunicaciones */}
             </Link></Box>
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>
@@ -41,8 +43,14 @@ export default function NavbarLanding() {
               variant='brand'
               fontWeight='500'
               w='100%'
-              bg='navy.800'
-              _hover={{ color:'navy.200'}}>
+              bg={buttonLogin}
+              _hover={{ color:'#f0f0f0', background:'#536dff'}}
+              _active={{
+                background: "#3e4ea9",
+                transform: "none",
+                borderColor: "transparent",
+              }}
+              >
               Ingresar
             </Button>
               <Button onClick={toggleColorMode}>
