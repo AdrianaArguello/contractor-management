@@ -13,7 +13,6 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 // Custom Components
-import { ItemContent } from "./ItemContent";
 import { SidebarResponsive } from "./sidebar/Sidebar";
 import PropTypes from "prop-types";
 import React from "react";
@@ -22,6 +21,7 @@ import React from "react";
 import { MdNotificationsNone } from "react-icons/md";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import { FaEthereum } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 // import routes from "routes.js";
 
 export default function HeaderLinks(props) {
@@ -40,6 +40,12 @@ export default function HeaderLinks(props) {
     "14px 17px 40px 4px rgba(112, 144, 176, 0.18)",
     "14px 17px 40px 4px rgba(112, 144, 176, 0.06)"
   );
+  let navigate = useNavigate();
+
+  const profile = async () => {
+    navigate('/profile');
+  }
+
   return (
     <Flex
       w={{ sm: "100%", md: "auto" }}
@@ -117,27 +123,6 @@ export default function HeaderLinks(props) {
               Mark all read
             </Text>
           </Flex>
-          <Flex flexDirection='column'>
-            <MenuItem
-              _hover={{ bg: "none" }}
-              _focus={{ bg: "none" }}
-              px='0'
-              borderRadius='8px'
-              mb='10px'>
-              <ItemContent info='Horizon UI Dashboard PRO' aName='Alicia' />
-            </MenuItem>
-            <MenuItem
-              _hover={{ bg: "none" }}
-              _focus={{ bg: "none" }}
-              px='0'
-              borderRadius='8px'
-              mb='10px'>
-              <ItemContent
-                info='Horizon Design System Free'
-                aName='Josh Henry'
-              />
-            </MenuItem>
-          </Flex>
         </MenuList>
       </Menu>
       <Button
@@ -196,7 +181,7 @@ export default function HeaderLinks(props) {
               _focus={{ bg: "none" }}
               borderRadius='8px'
               px='14px'>
-              <Text fontSize='sm'>Ver mi perfil</Text>
+            <Text fontSize='sm' onClick={() => profile()}>Ver mi perfil</Text>
             </MenuItem>
             <MenuItem
               _hover={{ bg: "none" }}

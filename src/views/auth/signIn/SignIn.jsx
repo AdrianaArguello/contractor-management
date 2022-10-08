@@ -20,6 +20,7 @@ import AuthLayout from "../../../layouts/themes/auth-layout/auth-layout";
 import illustration from "../../../assets/auth/principal-image.jpg";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
+import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
   // Chakra color mode
@@ -28,6 +29,11 @@ function SignIn() {
   const brandStars = useColorModeValue("brand.500", "brand.400");
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+  let navigate = useNavigate();
+
+  const logIn = async () => { 
+    navigate('/admin');
+  }
 
   return (
     <AuthLayout illustrationBackground={illustration} image={illustration}>
@@ -120,7 +126,9 @@ function SignIn() {
               fontWeight='500'
               w='100%'
               h='50'
-              mb='24px'>
+              mb='24px'
+              onClick={() => logIn()}
+              >
               Iniciar sesión
             </Button>
           </FormControl>

@@ -1,8 +1,6 @@
 
 import {
   Box,
-  useColorModeValue,
-  Text,
   Flex,
   Stack,
   Heading,
@@ -15,8 +13,6 @@ import principalImage from "../../assets/landing/imagen-principal.jpg";
 import '../../style/App.css';
 
 export default function Landing() {
-  const textColor = useColorModeValue("Navy.500", "white");
-
   return (
     <>
     <Box>

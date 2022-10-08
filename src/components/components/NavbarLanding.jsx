@@ -8,12 +8,17 @@ import {
   useColorMode,
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { useNavigate } from 'react-router-dom';
 
 export default function NavbarLanding() {
   const { colorMode, toggleColorMode } = useColorMode();
   let mainText = useColorModeValue("#3f51b5", "white");
   let buttonLogin = useColorModeValue("#3f51b5", "navy.800");
+  let navigate = useNavigate();
 
+  const logIn = async () => {
+    navigate('/signin');
+  }
   return (
     <>
       <Box bg={useColorModeValue('gray.200', 'gray.500')} boxShadow='base' px={4}>
@@ -50,6 +55,7 @@ export default function NavbarLanding() {
                 transform: "none",
                 borderColor: "transparent",
               }}
+              onClick={() => logIn()}
               >
               Ingresar
             </Button>
