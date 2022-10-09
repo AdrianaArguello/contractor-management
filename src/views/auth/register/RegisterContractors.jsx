@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 // Chakra imports
 import {
   Box,
@@ -15,11 +15,57 @@ import {
 import AuthLayout from "../../../layouts/themes/auth-layout/auth-layout";
 // Assets
 import illustration from "../../../assets/dashboards/Debit.png";
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
+import axios from "axios";
 
 export default function RegisterContractors(){
     const textColor = useColorModeValue("navy.800", "white");
     const textColorSecondary = "gray.400";
     const brandStars = useColorModeValue("brand.500", "brand.400");
+    let navigate = useNavigate();
+    const [type, setType] = useState("");
+    const [name, setName] = useState("");
+    const [data, setData] = useState([]);
+    const userData = sessionStorage.getItem("tk");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addPosts(type, name);
+ }
+
+  const config = {
+    headers: { Authorization: `Bearer ${userData}` }
+  };
+
+ const addPosts = (type, name) => {
+  axios.post('http://localhost:8000/api/contractors/create', {
+    type: type,
+    name: name,
+    config
+  })
+  .then((response) => {
+    setData([response.data, ...data]);
+    console.log('funciono')
+    Swal.fire({
+      title:'¡Bienvenido!',
+      text:'Haz ingresado exitosamente al sistema',
+      icon: 'success',
+      confirmButtonText:'Continuar'
+    })
+  })
+  .catch(error => {
+    console.log(error.response.data.error)
+    Swal.fire({
+      title: '¡Error!',
+      text: 'Revisa los datos ingresados y vuelve a intentarlo',
+      icon: 'error',
+      confirmButtonText: 'Continuar'
+    })
+  });
+  setType('');
+  setName('');
+ }
 
     return (
         <AuthLayout illustrationBackground={illustration} image={illustration}>
@@ -59,6 +105,7 @@ export default function RegisterContractors(){
               me='auto'
               mb={{ base: "20px", md: "auto" }}>
               <FormControl>
+              <form onSubmit={handleSubmit}>
                 <FormLabel
                   display='flex'
                   ms='4px'
@@ -73,11 +120,15 @@ export default function RegisterContractors(){
                   variant='auth'
                   fontSize='sm'
                   ms={{ base: "0px", md: "0px" }}
-                  type='email'
-                  placeholder='mail@simmmple.com'
+                  type='text'
                   mb='24px'
                   fontWeight='500'
                   size='lg'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  name="name"
+                  id="name"
+                  autoComplete="off"
                 />
                 <FormLabel
                   display='flex'
@@ -93,11 +144,15 @@ export default function RegisterContractors(){
                   variant='auth'
                   fontSize='sm'
                   ms={{ base: "0px", md: "0px" }}
-                  type='email'
-                  placeholder='mail@simmmple.com'
+                  type='text'
                   mb='24px'
                   fontWeight='500'
                   size='lg'
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  name="type"
+                  id="type"
+                  autoComplete="off"
                 />
                 <Button
                   fontSize='sm'
@@ -105,9 +160,11 @@ export default function RegisterContractors(){
                   fontWeight='500'
                   w='100%'
                   h='50'
-                  mb='24px'>
+                  mb='24px'
+                  type="submit">
                   Registrar
                 </Button>
+              </form>
               </FormControl>
             </Flex>
           </Flex>

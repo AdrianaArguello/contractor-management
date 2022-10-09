@@ -1,5 +1,4 @@
-import React from "react";
-// Chakra imports
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -14,13 +13,13 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-// Custom components
 import AuthLayout from "../../../layouts/themes/auth-layout/auth-layout";
-// Assets
 import illustration from "../../../assets/auth/principal-image.jpg";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
+import axios from "axios";
 
 function SignIn() {
   // Chakra color mode
@@ -30,11 +29,47 @@ function SignIn() {
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
   let navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [posts, setPosts] = useState([]);
 
-  const logIn = async () => { 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addPosts(email, password);
+ }
+
+ const addPosts = (email, password) => {
+  axios.post('http://localhost:8000/api/login', {
+    email: email,
+    password: password,
+  })
+  .then((response) => {
+    setPosts([response.data, ...posts]);
+    console.log('funciono')
+    Swal.fire({
+      title:'¡Bienvenido!',
+      text:'Haz ingresado exitosamente al sistema',
+      icon: 'success',
+      confirmButtonText:'Continuar'
+    })
+    sessionStorage.setItem("tk", response.data.authorization.token);
+    sessionStorage.setItem("userData", JSON.stringify(response.data.user));
     navigate('/admin');
-  }
+  })
+  .catch(error => {
+    console.log(error.response.data.error)
+    Swal.fire({
+      title: '¡Error!',
+      text: 'Revisa los datos ingresados y vuelve a intentarlo',
+      icon: 'error',
+      confirmButtonText: 'Continuar'
+    })
+  });
+  setEmail('');
+  setPassword('');
+ }
 
+ 
   return (
     <AuthLayout illustrationBackground={illustration} image={illustration}>
       <Flex
@@ -73,6 +108,7 @@ function SignIn() {
           me='auto'
           mb={{ base: "20px", md: "auto" }}>
           <FormControl>
+          <form onSubmit={handleSubmit}>
             <FormLabel
               display='flex'
               ms='4px'
@@ -80,7 +116,8 @@ function SignIn() {
               fontWeight='500'
               color={textColor}
               mb='8px'>
-              Correo<Text color={brandStars}>*</Text>
+              Correo
+              <Text color={brandStars}>*</Text>
             </FormLabel>
             <Input
               isRequired={true}
@@ -92,6 +129,11 @@ function SignIn() {
               mb='24px'
               fontWeight='500'
               size='lg'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              id="email"
+              autoComplete="off"
             />
             <FormLabel
               ms='4px'
@@ -99,17 +141,23 @@ function SignIn() {
               fontWeight='500'
               color={textColor}
               display='flex'>
-              Contraseña<Text color={brandStars}>*</Text>
+              Contraseña
+              <Text color={brandStars}>*</Text>
             </FormLabel>
             <InputGroup size='md'>
               <Input
                 isRequired={true}
+                value={password}
                 fontSize='sm'
                 placeholder='Min. 8 characters'
                 mb='24px'
                 size='lg'
+                onChange={(e) => setPassword(e.target.value)}
                 type={show ? "text" : "password"}
                 variant='auth'
+                name="password"
+                id="password"
+                autoComplete="off"
               />
               <InputRightElement display='flex' alignItems='center' mt='4px'>
                 <Icon
@@ -127,10 +175,11 @@ function SignIn() {
               w='100%'
               h='50'
               mb='24px'
-              onClick={() => logIn()}
-              >
+              type="submit"
+              background="#5d77a4">
               Iniciar sesión
             </Button>
+          </form>
           </FormControl>
         </Flex>
       </Flex>

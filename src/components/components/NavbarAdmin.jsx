@@ -25,7 +25,8 @@ export default function AdminNavbar(props) {
     };
   });
 
-  const { secondary, message, brandText, logoText } = props;
+  const { secondary, message, brandText, logoText, userData, navSize } = props;
+  console.log(navSize)
 
   // Here are all the props that may change depending on navbar's type or state.(secondary, variant, scrolled)
   let mainText = useColorModeValue("navy.700", "white");
@@ -85,7 +86,14 @@ export default function AdminNavbar(props) {
       }}
       pt='8px'
       top={{ base: "12px", md: "16px", xl: "18px" }}
-      w={{
+      w={navSize === "small" ? 
+      {
+        base: "calc(100vw - 6%)",
+        md: "calc(100vw - 8%)",
+        lg: "calc(100vw - 6%)",
+        xl: "calc(100vw - 170px)",
+        "2xl": "calc(100vw - 365px)",
+      }: {
         base: "calc(100vw - 6%)",
         md: "calc(100vw - 8%)",
         lg: "calc(100vw - 6%)",
@@ -139,6 +147,7 @@ export default function AdminNavbar(props) {
             secondary={props.secondary}
             fixed={props.fixed}
             scrolled={scrolled}
+            userData={userData}
           />
         </Box>
       </Flex>

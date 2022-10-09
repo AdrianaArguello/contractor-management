@@ -25,7 +25,7 @@ import { useNavigate } from 'react-router-dom';
 // import routes from "routes.js";
 
 export default function HeaderLinks(props) {
-  const { secondary } = props;
+  const { secondary, userData } = props;
   const { colorMode, toggleColorMode } = useColorMode();
   // Chakra Color Mode
   const navbarIcon = useColorModeValue("gray.400", "white");
@@ -172,7 +172,7 @@ export default function HeaderLinks(props) {
               fontSize='sm'
               fontWeight='700'
               color={textColor}>
-              👋&nbsp; Hey, Adela
+              👋&nbsp; {userData.name} {userData.lastname}
             </Text>
           </Flex>
           <Flex flexDirection='column' p='10px'>

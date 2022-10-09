@@ -14,6 +14,7 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.4.3",
     "apexcharts": "^3.35.4",
+    "axios": "^1.1.2",
     "framer-motion": "^6.5.1",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",
@@ -28,6 +29,7 @@
     "react-table": "^7.8.0",
     "stylis": "^4.1.1",
     "stylis-rtlcss": "^2.1.1",
+    "sweetalert2": "^11.4.38",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

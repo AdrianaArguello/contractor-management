@@ -13,7 +13,6 @@
     MdBarChart
   } from "react-icons/md";
   import { SidebarContext } from "../../../contexts/sidebarContext";
-  import Sidebar from "../../../components/components/sidebar/Sidebar";
   import React, { useState } from "react";
   import NavbarAdmin from "../../../components/components/NavbarAdmin";
   import Footer from "../../../components/components/footer/FooterAdmin";
@@ -21,12 +20,33 @@
   import IconBox from "../../../components/components/IconBox";
   import ComplexTable from "../../../components/components/ComplexTable"
   import routes from "../../../routes";
+  import {
+    Flex,
+    IconButton,
+    Divider,
+    Avatar,
+    Heading,
+} from '@chakra-ui/react'
+import {
+    FiMenu,
+    FiHome,
+    FiUser,
+    FiDollarSign,
+    FiBriefcase,
+    FiSettings
+} from 'react-icons/fi'
+import { IoPawOutline } from 'react-icons/io5'
+import { Link } from "react-router-dom";
+
+import NavItem from '../../../components/components/NavItem'
 
   export default function AdminDashboard() {
     const [toggleSidebar, setToggleSidebar] = useState(false);
     const brandColor = useColorModeValue("brand.500", "white");
     const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
     const textColor = useColorModeValue("navy.700", "white");
+    const userData =  JSON.parse(sessionStorage.getItem("userData"));
+    const [navSize, changeNavSize] = useState("large")
 
     const getActiveRoute = (routes) => {
       let activeRoute = "Admin";
@@ -60,7 +80,62 @@
           toggleSidebar,
           setToggleSidebar,
         }}>
-        <Sidebar/>
+        <Box display={{ sm: "none", xl: "block" }} position='fixed' minH='100%' left="5" >
+            <Flex
+                pos="sticky"
+                h="95%"
+                marginTop="2.5vh"
+                boxShadow="0 4px 12px 0 rgba(0, 0, 0, 0.05)"
+                borderRadius= "30px"
+                w={navSize === "small" ? "100px" : "250px"}
+                flexDir="column"
+                justifyContent="space-between">
+                <Flex
+                    p="5%"
+                    flexDir="column"
+                    w="100%"
+                    alignItems={navSize === "small" ? "center" : "flex-start"}
+                    as="nav"
+                >
+                    <IconButton
+                      style={{transition: "all 0.5s"}}
+                        background="none"
+                        mt={2}
+                        _hover={{ background: 'none' }}
+                        icon={<FiMenu />}
+                        onClick={() => {
+                          if (navSize === "small")
+                              changeNavSize("large")
+                          else
+                              changeNavSize("small")
+                        }}
+                    />
+                    <NavItem navSize={navSize} icon={FiHome} title="Pagina principal" description="This is the description for the dashboard." />
+                    <Link to="/registerContractor"><NavItem navSize={navSize} icon={FiUser} title="Registrar contratista" /></Link>
+                    <NavItem navSize={navSize} icon={IoPawOutline} title="Animals" />
+                    <NavItem navSize={navSize} icon={FiDollarSign} title="Stocks" />
+                    <NavItem navSize={navSize} icon={FiBriefcase} title="Reports" />
+                    <NavItem navSize={navSize} icon={FiSettings} title="Settings" />
+                </Flex>
+
+                <Flex
+                    p="5%"
+                    flexDir="column"
+                    w="100%"
+                    alignItems={navSize === "small" ? "center" : "flex-start"}
+                    mb={4}
+                >
+                    <Divider display={navSize === "small" ? "none" : "flex"} />
+                    <Flex mt={4} align="center">
+                        <Avatar size="sm" src="avatar-1.jpg" />
+                        <Flex flexDir="column" ml={4} display={navSize === "small" ? "none" : "flex"}>
+                            <Heading as="h3" size="sm">{userData.name} {userData.lastname}</Heading>
+                            <Text color="gray">Admin</Text>
+                        </Flex>
+                    </Flex>
+                </Flex>
+            </Flex>
+        </Box>
         <Box
           float='right'
           minHeight='100vh'
@@ -68,8 +143,9 @@
           overflow='auto'
           position='relative'
           maxHeight='100%'
-          w={{ base: "100%", xl: "calc( 100% - 290px )" }}
-          maxWidth={{ base: "100%", xl: "calc( 100% - 290px )" }}
+          style={navSize === "small" ? {transition: "all 0.3s"} : {transition:"all 0.3s"}}
+          w={ navSize === "small" ? {base: "100%", xl: "calc( 100% - 100px )"} : {base: "100%", xl: "calc( 100% - 10px )"} }
+          maxWidth={navSize === "small" ? { base: "100%", xl: "calc( 100% - 100px )" } : { base: "50%", xl: "calc( 100% - 290px )" } }
           transition='all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)'
           transitionDuration='.2s, .2s, .35s'
           transitionProperty='top, bottom, width'
@@ -79,6 +155,8 @@
               <NavbarAdmin
               logoText={"Elca Telecomunicaciones"}
               brandText={getActiveRoute(routes)}
+              userData={userData}
+              navSize={navSize}
               />
             </Box>
           </Portal>
