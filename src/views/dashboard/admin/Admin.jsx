@@ -5,20 +5,27 @@
     SimpleGrid,
     useColorModeValue,
     Icon,
-    Text
+    Text,
+    TableContainer,
+    Table,
+    Thead,
+    Tr,
+    Th,
+    Td,
+    Tbody,
   } from "@chakra-ui/react";
   import {
     MdAddTask,
     MdAttachMoney,
     MdBarChart
   } from "react-icons/md";
+  import Card from "../../../components/components/Card"
   import { SidebarContext } from "../../../contexts/sidebarContext";
-  import React, { useState } from "react";
+  import React, { useState, useEffect } from "react";
   import NavbarAdmin from "../../../components/components/NavbarAdmin";
   import Footer from "../../../components/components/footer/FooterAdmin";
   import MiniStatistics from "../../../components/components/MiniStatistics";
   import IconBox from "../../../components/components/IconBox";
-  import ComplexTable from "../../../components/components/ComplexTable"
   import routes from "../../../routes";
   import {
     Flex,
@@ -32,11 +39,11 @@ import {
     FiHome,
     FiUser,
     FiDollarSign,
+    FiSettings,
     FiBriefcase,
-    FiSettings
 } from 'react-icons/fi'
-import { IoPawOutline } from 'react-icons/io5'
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { getAllContractors } from '../../../api/auth-request'
 
 import NavItem from '../../../components/components/NavItem'
 
@@ -47,6 +54,17 @@ import NavItem from '../../../components/components/NavItem'
     const textColor = useColorModeValue("navy.700", "white");
     const userData =  JSON.parse(sessionStorage.getItem("userData"));
     const [navSize, changeNavSize] = useState("large")
+    const [contractors, setContractors] = useState([]);
+
+    useEffect( () => {
+      getAllContractorsData();
+    },[]);
+
+    const getAllContractorsData = async () => {
+      const res = await getAllContractors();
+      console.log('esto es admin', res)
+      setContractors(res.contractors);
+    }
 
     const getActiveRoute = (routes) => {
       let activeRoute = "Admin";
@@ -111,8 +129,8 @@ import NavItem from '../../../components/components/NavItem'
                         }}
                     />
                     <NavItem navSize={navSize} icon={FiHome} title="Pagina principal" description="This is the description for the dashboard." />
-                    <Link to="/registerContractor"><NavItem navSize={navSize} icon={FiUser} title="Registrar contratista" /></Link>
-                    <NavItem navSize={navSize} icon={IoPawOutline} title="Animals" />
+                    <Link to="/registerContractor"><NavItem navSize={navSize} icon={FiUser} title="Registrar contratista"/></Link>
+                    <Link to="/registerEmployee"><NavItem navSize={navSize} icon={FiBriefcase} title="Registrar empleado" /></Link>
                     <NavItem navSize={navSize} icon={FiDollarSign} title="Stocks" />
                     <NavItem navSize={navSize} icon={FiBriefcase} title="Reports" />
                     <NavItem navSize={navSize} icon={FiSettings} title="Settings" />
@@ -144,8 +162,22 @@ import NavItem from '../../../components/components/NavItem'
           position='relative'
           maxHeight='100%'
           style={navSize === "small" ? {transition: "all 0.3s"} : {transition:"all 0.3s"}}
-          w={ navSize === "small" ? {base: "100%", xl: "calc( 100% - 100px )"} : {base: "100%", xl: "calc( 100% - 10px )"} }
-          maxWidth={navSize === "small" ? { base: "100%", xl: "calc( 100% - 100px )" } : { base: "50%", xl: "calc( 100% - 290px )" } }
+          w={navSize === "small" ? 
+          {
+            base: "calc(100vw - 6%)",
+            md: "calc(100vw - 8%)",
+            lg: "calc(100vw - 6%)",
+            xl: "calc(100vw - 170px)",
+            "2xl": "calc(100vw - 365px)",
+          }: {
+            base: "calc(100vw - 3%)",
+            md: "calc(100vw - 1%)",
+            lg: "calc(100vw - 1%)",
+            xl: "calc(100vw - 300px)",
+            "2xl": "calc(100vw - 365px)",
+          }}
+          // w={ navSize === "small" ? {base: "100%", xl: "calc( 100% - 100px )"} : {base: "100%", xl: "calc( 100% - 10px )"} }
+          // maxWidth={navSize === "small" ? { base: "100%", xl: "calc( 100% - 100px )" } : { base: "50%", xl: "calc( 100% - 290px )" } }
           transition='all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)'
           transitionDuration='.2s, .2s, .35s'
           transitionProperty='top, bottom, width'
@@ -183,7 +215,7 @@ import NavItem from '../../../components/components/NavItem'
                       />
                     }
                     name='Contratistas'
-                    value='5'
+                    value={contractors?.length.toString()}
                   />
                   <MiniStatistics
                     startContent={
@@ -212,6 +244,7 @@ import NavItem from '../../../components/components/NavItem'
                     value='50'
                   />
                 </SimpleGrid>
+                
                 <Text
                   fontSize='22px'
                   fontWeight='700'
@@ -220,7 +253,43 @@ import NavItem from '../../../components/components/NavItem'
                   color={textColor}>
                   Información principal de contratistas
                 </Text>
-                <ComplexTable/>
+                <Card
+                
+                direction='column'
+                w='100%'
+                px='0px'
+                overflowX={{ sm: "scroll", lg: "hidden" }}>
+                <TableContainer>
+                <Table variant='simple' color='gray.500' mb='24px' borderRadius='30px'>
+                  <Thead>
+                    <Tr>
+                      <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>Contratistas</Th>
+                      <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>N. Empleados</Th>
+                     <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>Tipo</Th>
+                      <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>Reportes</Th>
+                    </Tr>
+                  </Thead>
+                  {contractors.map((contractor,index) => 
+                  <Tbody key={index}>
+                    <Tr>
+                      <Td>{contractor?.name}</Td>
+                      <Td>centimetres (cm)</Td>
+                      <Td>{contractor?.type}</Td>
+                      <Td isNumeric>30.48</Td>
+                    </Tr>
+                  </Tbody>
+                  )}
+                </Table>
+                </TableContainer>
+                </Card>
               </Box>
             </Box>
           <Box>

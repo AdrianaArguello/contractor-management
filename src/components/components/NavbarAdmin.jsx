@@ -111,7 +111,7 @@ export default function AdminNavbar(props) {
         <Box mb={{ sm: "8px", md: "0px" }}>
         <Breadcrumb spacing='8px' separator={<ChevronRightIcon color='gray.500' />}>
         <BreadcrumbItem>
-          <BreadcrumbLink href='#'>pages</BreadcrumbLink>
+          <BreadcrumbLink>pages</BreadcrumbLink>
         </BreadcrumbItem>
 
         <BreadcrumbItem color={secondaryText} fontSize='sm'>
