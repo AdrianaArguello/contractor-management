@@ -1,20 +1,37 @@
 import { 
-    Portal,
-    Box,
-    useColorModeValue,
-    Text
+  Portal,
+  Box,
+  SimpleGrid,
+  useColorModeValue,
+  Icon,
+  Text,
+  TableContainer,
+  Table,
+  Thead,
+  Button,
+  Tr,
+  Th,
+  Td,
+  Tbody,
+  Grid,
   } from "@chakra-ui/react";
+  import Card from "../../../components/components/Card"
   import { SidebarContext } from "../../../contexts/sidebarContext";
   import Sidebar from "../../../components/components/sidebar/Sidebar";
-  import React, { useState } from "react";
+  import React, { useState, useEffect } from "react";
   import NavbarAdmin from "../../../components/components/NavbarAdmin";
   import Footer from "../../../components/components/footer/FooterAdmin";
-  import ComplexTable from "../../../components/components/ComplexTable"
+  import { getAllEmployees } from '../../../api/auth-request';
   import routes from "../../../routes";
+import { useNavigate } from "react-router-dom";
 
   export default function AdminDashboardEmployee() {
     const [toggleSidebar, setToggleSidebar] = useState(false);
     const textColor = useColorModeValue("navy.700", "white");
+    let navigate = useNavigate();
+    const userData =  JSON.parse(sessionStorage.getItem("userData"));
+    const [navSize, changeNavSize] = useState("large")
+    const [employees, setEmployees] = useState([]);
 
     const getActiveRoute = (routes) => {
       let activeRoute = "Empleados";
@@ -40,6 +57,20 @@ import {
       return activeRoute;
     };
 
+    useEffect( () => {
+      getAllEmployeesData();
+  },[]);
+
+  const getAllEmployeesData = async () => {
+      const res = await getAllEmployees();
+      setEmployees(res.employees);
+  }
+
+  const addRange = async (id) => {
+    navigate( `/registerRatesByEmployee/${id}`)
+  }
+
+   console.log(employees)
     return (
       <>
         <Box>
@@ -67,6 +98,8 @@ import {
               <NavbarAdmin
               logoText={"Elca Telecomunicaciones"}
               brandText={getActiveRoute(routes)}
+              userData={userData}
+              navSize={navSize}
               />
             </Box>
           </Portal>
@@ -77,15 +110,81 @@ import {
               minH='100vh'
               pt='50px'>
               <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-                <Text
+              <Text
                   fontSize='22px'
                   fontWeight='700'
                   lineHeight='100%'
                   mb='20px'
                   color={textColor}>
-                  Empleados contratista guardioca
+                  Información principal de contratistas
                 </Text>
-                <ComplexTable/>
+                <Card
+                
+                direction='column'
+                w='100%'
+                px='0px'
+                overflowX={{ sm: "scroll", lg: "hidden" }}>
+                <TableContainer>
+                <Table variant='simple' color='gray.500' mb='24px' borderRadius='30px'>
+                  <Thead>
+                    <Tr>
+                      <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>Nombre</Th>
+                      <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>Apellido</Th>
+                     <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>Telefono</Th>
+                    <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>Ver Empleados</Th>
+                    <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'> </Th>
+                     <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'> </Th>
+                    </Tr>
+                  </Thead>
+                  {employees?.length > 0 ? employees.map((employee,index) => 
+                  <Tbody key={index}>
+                    <Tr>
+                      <Td>{employee?.name}</Td>
+                      <Td>{employee?.lastname}</Td>
+                      <Td>{employee?.phone}</Td>
+                      <Td>hola</Td>
+                      <Td>
+                        <Button
+                          fontSize='sm'
+                          variant='brand'
+                          fontWeight='500'
+                          h='50'
+                          type="button"
+                          onClick={() => addRange(employee.id)}>
+                          Agregar tarifa
+                        </Button>
+                      </Td>
+                       {/* <Td>
+                        <Button
+                          colorScheme='red'
+                          fontSize='sm'
+                          variant='brand'
+                          fontWeight='500'
+                          h='50'
+                          type="button"
+                          onClick={() => deleteContractorsData(contractor.id)}
+                          >
+                          Eliminar
+                        </Button>
+                      </Td> */}
+                    </Tr>
+                  </Tbody>
+                  ): ''}
+                </Table>
+                </TableContainer>
+                </Card>
               </Box>
             </Box>
           <Box>

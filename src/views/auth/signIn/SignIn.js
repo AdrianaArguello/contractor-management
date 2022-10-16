@@ -45,16 +45,18 @@ function SignIn() {
   })
   .then((response) => {
     setPosts([response.data, ...posts]);
-    console.log('funciono')
+    sessionStorage.setItem("tk", response.data.authorization.token);
+    sessionStorage.setItem("userData", JSON.stringify(response.data.user));
     Swal.fire({
       title:'¡Bienvenido!',
       text:'Haz ingresado exitosamente al sistema',
       icon: 'success',
       confirmButtonText:'Continuar'
     })
-    sessionStorage.setItem("tk", response.data.authorization.token);
-    sessionStorage.setItem("userData", JSON.stringify(response.data.user));
-    navigate('/admin');
+    var existToken = sessionStorage.getItem("tk");
+    if(existToken){
+      navigate('/admin');
+    }
   })
   .catch(error => {
     console.log(error.response.data.error)

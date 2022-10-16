@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+
 // Chakra imports
 import {
   Box,
@@ -14,6 +15,9 @@ import {
 } from "@chakra-ui/react";
 // Custom components
 import AuthLayout from "../../../layouts/themes/auth-layout/auth-layout";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 // Assets
 import illustration from "../../../assets/dashboards/Debit.png";
 import Swal from 'sweetalert2'
@@ -27,26 +31,31 @@ export default function RegisterEmployee(){
     const [charges, setCharges] = useState("")
     const [contractors, setContractors] = useState("");
     const [roles, setRoles] = useState("");
+    // const [startDate, setStartDate] = useState(new Date());
+    const genders = [
+      {'value': 'Mujer'},
+      {'value': 'Hombre'}
+    ];
+    const userData = sessionStorage.getItem("tk");
+    const config = {headers: { Authorization: `Bearer ${userData}` }};
 
     const [name, setName] = useState("");
     const [lastname, setLastname] = useState("");
-    const [identification, setIdentification] = useState("");
     const [email, setEmail] = useState("");
-    const [dateBirth, setdateBirth] = useState("");
-    const [gender, setGender] = useState("");
-    const [phone, setPhone] = useState("");
-    const [address, setAddress] = useState("");
     const [password, setPassword] = useState("");
     const [charge, setCharge] = useState("");
     const [contractor, setContractor] = useState("");
-
-
-  // cambiar el endpoint cuando exista 
-    const [data, setData] = useState([]);
+    const [role, setRole] = useState("");
+    const [identification, setIdentification] = useState("");
+    // const [dateBirth, setdateBirth] = useState("");
+    const [startDate, setStartDate] = useState(new Date());
+    const [gender, setGender] = useState("");
+    const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
 
     const handleSubmit = (e) => {
       e.preventDefault();
-      addPosts(name, lastname, identification, email, dateBirth, gender, phone, address, password);
+      addPosts(name, lastname, email, password, charge, contractor, role, identification, startDate, gender, phone, address);
     }
 
     useEffect( () => {
@@ -84,17 +93,36 @@ export default function RegisterEmployee(){
     const handleTypeSelectContractor = e => {
       setContractor(e.target.value);
     };
+
+    const handleTypeSelectRoles = e => {
+      setRole(e.target.value);
+    }
+
+    const handleTypeGender = e => {
+      setGender(e.target.value);
+    };
     
     console.log(contractor)
 
-    const addPosts = (type, name) => {
-      axios.post('http://localhost:8000/api/contractors/create', {
-        name: name,
-        type: type,
-      })
+    const sendData = {
+      name: name,
+      lastname: lastname,
+      email: email,
+      password: password,
+      id_charge: charge,
+      id_contractor: contractor,
+      id_role: role,
+      identification: identification,
+      date_birth: startDate,
+      gender: gender,
+      phone: phone,
+      address: address
+    }
+
+    
+    const addPosts = () => {
+      axios.post('http://localhost:8000/api/register', sendData , config)
       .then((response) => {
-        setData([response.data, ...data]);
-        console.log('funciono')
         Swal.fire({
           title:'¡Bienvenido!',
           text:'Haz ingresado exitosamente al sistema',
@@ -113,16 +141,17 @@ export default function RegisterEmployee(){
       });
       setName('');
       setLastname('');
-      setIdentification('');
       setEmail('');
-      setdateBirth('');
+      setPassword('');
+      setCharge('')
+      setContractor('')
+      setRole('')
+      setIdentification('');
+      setStartDate('');
       setGender('');
       setPhone('');
       setAddress('');
-      setPassword('');
      }
-
-    
 
     return (
         <AuthLayout illustrationBackground={illustration} image={illustration}>
@@ -131,7 +160,7 @@ export default function RegisterEmployee(){
             w='100%'
             mx={{ base: "auto", lg: "0px" }}
             me='auto'
-            h='100%'
+            h='auto'
             alignItems='start'
             justifyContent='center'
             mb={{ base: "30px", md: "60px" }}
@@ -162,6 +191,7 @@ export default function RegisterEmployee(){
               me='auto'
               mb={{ base: "20px", md: "auto" }}>
               <FormControl>
+                <form onSubmit={handleSubmit}>
                 <FormLabel
                   display='flex'
                   ms='4px'
@@ -176,9 +206,10 @@ export default function RegisterEmployee(){
                   variant='auth'
                   fontSize='sm'
                   ms={{ base: "0px", md: "0px" }}
-                  type='email'
+                  type='text'
                   placeholder='mail@simmmple.com'
                   mb='24px'
+                  onChange={(e) => setName(e.target.value)}
                   fontWeight='500'
                   size='md'
                 />
@@ -196,11 +227,12 @@ export default function RegisterEmployee(){
                   variant='auth'
                   fontSize='sm'
                   ms={{ base: "0px", md: "0px" }}
-                  type='email'
+                  type='text'
                   placeholder='mail@simmmple.com'
                   mb='24px'
                   fontWeight='500'
                   size='md'
+                  onChange={(e) => setLastname(e.target.value)}
                 />
                 <FormLabel
                   display='flex'
@@ -208,7 +240,8 @@ export default function RegisterEmployee(){
                   fontSize='sm'
                   fontWeight='500'
                   color={textColor}
-                  mb='8px'>
+                  mb='8px'
+                  >
                   Cedula<Text color={brandStars}>*</Text>
                 </FormLabel>
                 <Input
@@ -216,11 +249,12 @@ export default function RegisterEmployee(){
                   variant='auth'
                   fontSize='sm'
                   ms={{ base: "0px", md: "0px" }}
-                  type='email'
+                  type='text'
                   placeholder='mail@simmmple.com'
                   mb='24px'
                   fontWeight='500'
                   size='lg'
+                  onChange={(e) => setIdentification(e.target.value)}
                 />
                 <FormLabel
                   display='flex'
@@ -241,6 +275,7 @@ export default function RegisterEmployee(){
                   mb='24px'
                   fontWeight='500'
                   size='lg'
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <FormLabel
                   display='flex'
@@ -251,16 +286,75 @@ export default function RegisterEmployee(){
                   mb='8px'>
                   Fecha de nacimiento<Text color={brandStars}>*</Text>
                 </FormLabel>
+                <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+                <FormLabel
+                  display='flex'
+                  ms='4px'
+                  fontSize='sm'
+                  fontWeight='500'
+                  color={textColor}
+                  mb='8px'>
+                  Genero <Text color={brandStars}>*</Text>
+                </FormLabel>
+                <Select 
+                  isRequired={true}
+                  id="id_charge"
+                  name="id_charge"
+                  fontSize='sm'
+                  ms={{ base: "0px", md: "0px" }}
+                  mb='24px'
+                  fontWeight='500'
+                  size='lg'
+                  autoComplete="off"
+                  onChange={handleTypeGender}
+                  placeholder='Seleccione una opción'>
+                  {genders?.length > 0 ? genders.map((gender, index) =>
+                    <option value={gender.value} key={index}>
+                      {gender.value}
+                    </option>
+                  ): ''}
+                </Select>
+                <FormLabel
+                  display='flex'
+                  ms='4px'
+                  fontSize='sm'
+                  fontWeight='500'
+                  color={textColor}
+                  mb='8px'>
+                  Telefono<Text color={brandStars}>*</Text>
+                </FormLabel>
                 <Input
                   isRequired={true}
                   variant='auth'
                   fontSize='sm'
                   ms={{ base: "0px", md: "0px" }}
-                  type='email'
+                  type='text'
                   placeholder='mail@simmmple.com'
                   mb='24px'
                   fontWeight='500'
                   size='lg'
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+                <FormLabel
+                  display='flex'
+                  ms='4px'
+                  fontSize='sm'
+                  fontWeight='500'
+                  color={textColor}
+                  mb='8px'>
+                  Dirección<Text color={brandStars}>*</Text>
+                </FormLabel>
+                <Input
+                  isRequired={true}
+                  variant='auth'
+                  fontSize='sm'
+                  ms={{ base: "0px", md: "0px" }}
+                  type='text'
+                  placeholder='mail@simmmple.com'
+                  mb='24px'
+                  fontWeight='500'
+                  size='lg'
+                  onChange={(e) => setAddress(e.target.value)}
                 />
                 <FormLabel
                   display='flex'
@@ -335,7 +429,7 @@ export default function RegisterEmployee(){
                   fontWeight='500'
                   size='lg'
                   autoComplete="off"
-                  onChange={handleTypeSelectContractor}
+                  onChange={handleTypeSelectRoles}
                   placeholder='Seleccione una opción'>
                   {roles?.length > 0 ? roles.map((roles, index) =>
                     <option value={roles.id} key={index}>
@@ -349,9 +443,12 @@ export default function RegisterEmployee(){
                   fontWeight='500'
                   w='100%'
                   h='50'
-                  mb='24px'>
+                  mb='24px'
+                  type="submit"
+                  >
                   Registrar Empleado
                 </Button>
+                </form>
               </FormControl>
             </Flex>
           </Flex>

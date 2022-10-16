@@ -9,10 +9,12 @@
     TableContainer,
     Table,
     Thead,
+    Button,
     Tr,
     Th,
     Td,
     Tbody,
+    Grid,
   } from "@chakra-ui/react";
   import {
     MdAddTask,
@@ -39,11 +41,10 @@ import {
     FiHome,
     FiUser,
     FiDollarSign,
-    FiSettings,
     FiBriefcase,
 } from 'react-icons/fi'
-import { Link } from 'react-router-dom';
-import { getAllContractors } from '../../../api/auth-request'
+import { Link, useNavigate } from 'react-router-dom';
+import { getCharges, getCounts, deletePeriodById, deleteContractors, deleteChargesById, getAllEmployeesByContractor,getAllPeriods, getAllRates } from '../../../api/auth-request';
 
 import NavItem from '../../../components/components/NavItem'
 
@@ -55,17 +56,45 @@ import NavItem from '../../../components/components/NavItem'
     const userData =  JSON.parse(sessionStorage.getItem("userData"));
     const [navSize, changeNavSize] = useState("large")
     const [contractors, setContractors] = useState([]);
+    const [charges, setCharges] = useState([]);
+    const [periods, setPeriods] = useState([]);
+    const [count, setCount] = useState([]);
+    const [rates, setRates] = useState([]);
+    let navigate = useNavigate();
 
     useEffect( () => {
-      getAllContractorsData();
+        getAllContractorsData();
+        getAllChargesData();
+        getAllPeriodsData();
+        getCountsData();
+        getAllRatesData();
     },[]);
 
     const getAllContractorsData = async () => {
-      const res = await getAllContractors();
-      console.log('esto es admin', res)
-      setContractors(res.contractors);
+        const res = await getAllEmployeesByContractor();
+        setContractors(res.data);
     }
 
+    const getAllPeriodsData = async () => {
+      const res = await getAllPeriods();
+      setPeriods(res.period)
+    }
+
+    const getAllChargesData = async () => {
+      const res = await getCharges();
+      setCharges(res)
+    }
+
+    const getCountsData = async () => {
+      const res = await getCounts();
+      setCount(res)
+    }
+
+    const getAllRatesData = async () => {
+      const res = await getAllRates();
+      setRates(res.rate);
+    }
+ 
     const getActiveRoute = (routes) => {
       let activeRoute = "Admin";
       for (let i = 0; i < routes.length; i++) {
@@ -82,13 +111,48 @@ import NavItem from '../../../components/components/NavItem'
         } else {
           if (
             window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-          ) {
-            return routes[i].name;
+            ) {
+              return routes[i].name;
+            }
           }
         }
-      }
-      return activeRoute;
+        return activeRoute;
     };
+      
+    const editContractor = async (id) => {
+      navigate(`/editContractors/${id}`);
+    }
+    
+    const editCharge = async (id) => {
+      navigate(`/editCharges/${id}`);
+    }
+
+    const editRate = async (id) => {
+      navigate(`/editRates/${id}`);
+    }
+      
+    const deleteContractorsData = async (id) => {
+      await deleteContractors(id);
+      getAllContractorsData();
+    }
+
+    const deleteChargeData = async (id) => {
+      await deleteChargesById(id);
+      getAllChargesData();
+    }
+
+    const editPeriod = async (id) => {
+      navigate(`/editPeriods/${id}`);
+    }
+
+    const deletePeriodData = async (id) => {
+      await deletePeriodById(id);
+      getAllPeriodsData();
+    }
+
+    const handleRegisterRate = async (idPeriod) => {
+      navigate( `/registerRates/${idPeriod}`)
+    }
 
     return (
       <>
@@ -128,12 +192,13 @@ import NavItem from '../../../components/components/NavItem'
                               changeNavSize("small")
                         }}
                     />
-                    <NavItem navSize={navSize} icon={FiHome} title="Pagina principal" description="This is the description for the dashboard." />
+                    <Link to="/adminEmployee"><NavItem navSize={navSize} icon={FiHome} title="Ver Empleados" /></Link>
                     <Link to="/registerContractor"><NavItem navSize={navSize} icon={FiUser} title="Registrar contratista"/></Link>
                     <Link to="/registerEmployee"><NavItem navSize={navSize} icon={FiBriefcase} title="Registrar empleado" /></Link>
-                    <NavItem navSize={navSize} icon={FiDollarSign} title="Stocks" />
+                    <Link to="/registerPeriods"><NavItem navSize={navSize} icon={FiDollarSign} title="Registrar periodos" /></Link>
+                    <Link to="/registerCharge"><NavItem navSize={navSize} icon={FiDollarSign} title="Registrar nuevo cargo" /></Link>
                     <NavItem navSize={navSize} icon={FiBriefcase} title="Reports" />
-                    <NavItem navSize={navSize} icon={FiSettings} title="Settings" />
+                    {/* <NavItem navSize={navSize} icon={FiSettings} title="Settings" /> */}
                 </Flex>
 
                 <Flex
@@ -229,7 +294,7 @@ import NavItem from '../../../components/components/NavItem'
                       />
                     }
                     name='Pagos'
-                    value='20'
+                    value={count.rates}
                   />
                   <MiniStatistics
                     startContent={
@@ -241,7 +306,7 @@ import NavItem from '../../../components/components/NavItem'
                       />
                     }
                     name='Empleados'
-                    value='50'
+                    value={count.employees}
                   />
                 </SimpleGrid>
                 
@@ -272,24 +337,267 @@ import NavItem from '../../../components/components/NavItem'
                      <Th align='center'
                     fontSize={{ sm: "10px", lg: "12px" }}
                     color='gray.400'>Tipo</Th>
-                      <Th align='center'
+                    <Th align='center'
                     fontSize={{ sm: "10px", lg: "12px" }}
-                    color='gray.400'>Reportes</Th>
+                    color='gray.400'>Ver Empleados</Th>
+                    <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'> </Th>
+                     <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'> </Th>
                     </Tr>
                   </Thead>
-                  {contractors.map((contractor,index) => 
+                  {contractors?.length > 0 ? contractors.map((contractor,index) => 
                   <Tbody key={index}>
                     <Tr>
                       <Td>{contractor?.name}</Td>
-                      <Td>centimetres (cm)</Td>
+                      <Td>{contractor?.cantidad_empleados}</Td>
                       <Td>{contractor?.type}</Td>
-                      <Td isNumeric>30.48</Td>
+                      <Td>hola</Td>
+                      <Td>
+                        <Button
+                          fontSize='sm'
+                          variant='brand'
+                          fontWeight='500'
+                          h='50'
+                          type="button"
+                          onClick={() => editContractor(contractor.id)}>
+                          Editar
+                        </Button>
+                      </Td>
+                      <Td>
+                        <Button
+                          colorScheme='red'
+                          fontSize='sm'
+                          variant='brand'
+                          fontWeight='500'
+                          h='50'
+                          type="button"
+                          onClick={() => deleteContractorsData(contractor.id)}
+                          >
+                          Eliminar
+                        </Button>
+                      </Td>
                     </Tr>
                   </Tbody>
-                  )}
+                  ): ''}
                 </Table>
                 </TableContainer>
                 </Card>
+                <Text
+                  fontSize='22px'
+                  fontWeight='700'
+                  lineHeight='100%'
+                  mb='20px'
+                  mt='20px'
+                  color={textColor}>
+                  Periodos registrados
+                </Text>
+                <Card
+                
+                direction='column'
+                w='100%'
+                px='0px'
+                overflowX={{ sm: "scroll", lg: "hidden" }}>
+                <TableContainer>
+                <Table variant='simple' color='gray.500' mb='24px' borderRadius='30px'>
+                  <Thead>
+                    <Tr>
+                      <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>Fecha de inicio</Th>
+                    <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>Fecha final</Th>
+                    <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>status</Th>
+                    <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'> </Th>
+                     <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'> </Th>
+                    </Tr>
+                  </Thead>
+                  {periods?.length > 0 ? periods.map((period, index) => 
+                  <Tbody key={index}>
+                    <Tr>
+                      <Td>{period?.initial_date}</Td>
+                      <Td>{period?.final_date}</Td>
+                      <Td>{period?.status}</Td>
+                      <Td>
+                        <Button
+                          fontSize='sm'
+                          variant='brand'
+                          fontWeight='500'
+                          h='50'
+                          type="button"
+                          onClick={() => editPeriod(period.id)}>
+                          Editar
+                        </Button>
+                      </Td>
+                      <Td>
+                        <Button
+                          colorScheme='red'
+                          fontSize='sm'
+                          variant='brand'
+                          fontWeight='500'
+                          h='50'
+                          type="button"
+                          onClick={() => deletePeriodData(period.id)}
+                          >
+                          Eliminar
+                        </Button>
+                      </Td>
+                      <Td>
+                        <Button
+                          fontSize='sm'
+                          variant='brand'
+                          fontWeight='500'
+                          h='50'
+                          type="button"
+                          onClick={() => handleRegisterRate(period?.id)}>
+                          Registrar tarifa
+                        </Button>
+                      </Td>
+                    </Tr>
+                  </Tbody>
+                  ): ''}
+                </Table>
+                </TableContainer>
+                </Card>
+                <Grid
+                  mb='20px'
+                  mt='20px'
+                  templateColumns={{
+                    base: "1fr",
+                    lg: "repeat(2, 1fr)",
+                    "2xl": "1.34fr 1.62fr 1fr",
+                  }}
+                  templateRows={{
+                    base: "1fr",
+                    lg: "repeat(1, 1fr)",
+                    "2xl": "1fr",
+                  }}
+                  gap={{ base: "20px", xl: "20px" }}>
+                <Card
+                    direction='column'
+                    w='100%'
+                    px='0px'
+                    overflowX={{ sm: "scroll", lg: "hidden" }}>
+                    <Text
+                      fontSize='22px'
+                      fontWeight='700'
+                      ml="15px"
+                      lineHeight='100%'
+                      mb='20px'
+                      color={textColor}>
+                        Cargos registrados
+                    </Text>
+                <TableContainer>
+                <Table variant='simple' color='gray.500' mb='24px' borderRadius='30px'>
+                  <Thead>
+                    <Tr>
+                      <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>Cargos</Th>
+                    <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'> </Th>
+                     <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'> </Th>
+                    </Tr>
+                  </Thead>
+                  {charges?.length > 0 ? charges.map((charge, index) => 
+                  <Tbody key={index}>
+                    <Tr>
+                      <Td>{charge?.type}</Td>
+                      <Td>
+                        <Button
+                          fontSize='sm'
+                          variant='brand'
+                          fontWeight='500'
+                          h='50'
+                          type="button"
+                          onClick={() => editCharge(charge.id)}>
+                          Editar
+                        </Button>
+                      </Td>
+                      <Td>
+                        <Button
+                          colorScheme='red'
+                          fontSize='sm'
+                          variant='brand'
+                          fontWeight='500'
+                          h='50'
+                          type="button"
+                          onClick={() => deleteChargeData(charge.id)}
+                          >
+                          Eliminar
+                        </Button>
+                      </Td>
+                    </Tr>
+                  </Tbody>
+                  ): ''}
+                </Table>
+                </TableContainer>
+                </Card>
+                <Card
+                    direction='column'
+                    w='100%'
+                    px='0px'
+                    overflowX={{ sm: "scroll", lg: "hidden" }}>
+                    <Text
+                      fontSize='22px'
+                      fontWeight='700'
+                      ml="15px"
+                      lineHeight='100%'
+                      mb='20px'
+                      color={textColor}>
+                        Tarifas por periodo
+                    </Text>
+                <TableContainer>
+                <Table variant='simple' color='gray.500' mb='24px' borderRadius='30px'>
+                  <Thead>
+                    <Tr>
+                      <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>N</Th>
+                    <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'>Tarifa</Th>
+                    <Th align='center'
+                    fontSize={{ sm: "10px", lg: "12px" }}
+                    color='gray.400'> </Th>
+                    </Tr>
+                  </Thead>
+                  {rates?.length > 0 ? rates.map((rates, index) => 
+                  <Tbody key={index}>
+                    <Tr>
+                      <Td>{rates?.id}</Td>
+                      <Td>{rates?.salary}</Td>
+                      <Td>
+                        <Button
+                          fontSize='sm'
+                          variant='brand'
+                          fontWeight='500'
+                          h='50'
+                          type="button"
+                          onClick={() => editRate(rates.id)}>
+                          Editar
+                        </Button>
+                      </Td>
+                    </Tr>
+                  </Tbody>
+                  ): ''}
+                </Table>
+                </TableContainer>
+                </Card>
+
+                </Grid>
               </Box>
             </Box>
           <Box>

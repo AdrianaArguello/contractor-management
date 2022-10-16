@@ -21,6 +21,7 @@ import {
   export default function AdminDashboard() {
     const [toggleSidebar, setToggleSidebar] = useState(false);
     const textColor = useColorModeValue("navy.700", "white");
+    const userData = sessionStorage.getItem("tk");
 
 
     const getActiveRoute = (routes) => {
@@ -74,6 +75,7 @@ import {
               <NavbarAdmin
                 logoText={"Perfil"}
                 brandText={getActiveRoute(routes)}
+                userData={userData}
               />
             </Box>
           </Portal>
