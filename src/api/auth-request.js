@@ -17,15 +17,19 @@ export async function getCounts() {
 };
 
 
-// export async function getUserDetail() {
-//     try {
-//         const res = await axios.get("localhost:8000/api/user/detail");
-//         return res;
-//     }
-//     catch(err){
-//         return err.response;
-//     }
-// };
+export async function getUserDetail() {
+    const userData = sessionStorage.getItem("tk");
+    try {
+        const res = await axios.get("http://localhost:8000/api/user/detail", {
+            headers: { Authorization: `Bearer ${userData}` }
+        });
+        const data = res.data;
+        return data;
+    }
+    catch(err){
+        return err.response;
+    }
+};
  
 export async function getContractorById(id) {
     try {
@@ -106,6 +110,23 @@ export async function getAllEmployees() {
         const token = sessionStorage.getItem("tk");
         if(token !== null){
             const res = await axios.get('http://localhost:8000/api/user/getAll',{
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = res.data;
+            return data;
+        }
+    }
+    catch(err){
+        return err.response;
+    }
+};
+
+export async function getEmployeeByIdContractor(id) {
+    try {
+        const token = sessionStorage.getItem("tk");
+        console.log('soy el id', id)
+        if(token !== null){
+            const res = await axios.get( `http://localhost:8000/api/employeesRates/getByIdContractor/${id}`,{
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = res.data;
@@ -294,6 +315,39 @@ export async function getAllRates(){
         const token = sessionStorage.getItem("tk");
         if(token !== null){
             const res = await axios.get('http://localhost:8000/api/rate/get', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = res.data;
+            return data;
+        }
+    }
+    catch(err){
+        return err.response;
+    }
+}
+
+// reports
+export async function getReportsPDf(){
+    try {
+        const token = sessionStorage.getItem("tk");
+        if(token !== null){
+            const res = await axios.get('http://localhost:8000/create-pdf-file', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = res.data;
+            return data;
+        }
+    }
+    catch(err){
+        return err.response;
+    }
+}
+
+export async function getReportsJobPDf(id){
+    try {
+        const token = sessionStorage.getItem("tk");
+        if(token !== null){
+            const res = await axios.get(`http://localhost:8000/create-job-letter/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = res.data;

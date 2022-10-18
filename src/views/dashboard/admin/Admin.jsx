@@ -154,6 +154,11 @@ import NavItem from '../../../components/components/NavItem'
       navigate( `/registerRates/${idPeriod}`)
     }
 
+    const goToEmployees = async (idContractor) => {
+      console.log('envio el id', idContractor)
+      navigate( `/adminEmployeeByContractor/${idContractor}`)
+    }
+
     return (
       <>
         <Box>
@@ -197,7 +202,7 @@ import NavItem from '../../../components/components/NavItem'
                     <Link to="/registerEmployee"><NavItem navSize={navSize} icon={FiBriefcase} title="Registrar empleado" /></Link>
                     <Link to="/registerPeriods"><NavItem navSize={navSize} icon={FiDollarSign} title="Registrar periodos" /></Link>
                     <Link to="/registerCharge"><NavItem navSize={navSize} icon={FiDollarSign} title="Registrar nuevo cargo" /></Link>
-                    <NavItem navSize={navSize} icon={FiBriefcase} title="Reports" />
+                    <Link to="/reports"><NavItem navSize={navSize} icon={FiBriefcase} title="Reports" /></Link>
                     {/* <NavItem navSize={navSize} icon={FiSettings} title="Settings" /> */}
                 </Flex>
 
@@ -354,7 +359,6 @@ import NavItem from '../../../components/components/NavItem'
                       <Td>{contractor?.name}</Td>
                       <Td>{contractor?.cantidad_empleados}</Td>
                       <Td>{contractor?.type}</Td>
-                      <Td>hola</Td>
                       <Td>
                         <Button
                           fontSize='sm'
@@ -374,9 +378,20 @@ import NavItem from '../../../components/components/NavItem'
                           fontWeight='500'
                           h='50'
                           type="button"
-                          onClick={() => deleteContractorsData(contractor.id)}
+                          onClick={() => deleteContractorsData(contractor?.id)}
                           >
                           Eliminar
+                        </Button>
+                      </Td>
+                      <Td>
+                      <Button
+                          fontSize='sm'
+                          variant='brand'
+                          fontWeight='500'
+                          h='50'
+                          type="button"
+                          onClick={() => goToEmployees(contractor?.id)}>
+                          Ver empleados
                         </Button>
                       </Td>
                     </Tr>

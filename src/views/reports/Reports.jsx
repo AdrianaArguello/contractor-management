@@ -4,24 +4,31 @@
     Box,
     SimpleGrid,
     useColorModeValue,
-    Icon
+    Icon,
+    Button
   } from "@chakra-ui/react";
   import {
     MdDownload
   } from "react-icons/md";
   import { SidebarContext } from "../../contexts/sidebarContext";
   import Sidebar from "../../components/components/sidebar/Sidebar";
-  import React, { useState } from "react";
+  import React, { useState, useEffect } from "react";
   import NavbarAdmin from "../../components/components/NavbarAdmin";
   import Footer from "../../components/components/footer/FooterAdmin";
   import MiniStatistics from "../../components/components/MiniStatistics";
   import IconBox from "../../components/components/IconBox";
   import routes from "../../routes";
+  import { getReportsPDf } from '../../api/auth-request';
+  import axios from "axios";
+  import { saveAs } from 'file-saver'
+
 
   export default function Reports() {
     const [toggleSidebar, setToggleSidebar] = useState(false);
     const brandColor = useColorModeValue("brand.500", "white");
     const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+    const userData = sessionStorage.getItem("tk");
+
 
     const getActiveRoute = (routes) => {
       let activeRoute = "Reportes";
@@ -46,6 +53,26 @@
       }
       return activeRoute;
     };
+
+  // useEffect( () => {
+  //   getAllEmployeesByContractorData();
+  // },[]);
+
+  // const getPdf = async (userData) => {
+  //   return axios.get('http://localhost:8000/create-pdf-file', {
+  //     headers: {
+  //       'Content-Type': 'multipart/form-data'
+  //     },
+  //     responseType: 'arraybuffer'
+  //   })
+  // }
+
+  // async function downloadPdf() {
+  //   const { data } = await getPdf()
+  //   const blob = new Blob([data], { type: 'application/pdf' })
+  //   saveAs(blob, "tickets.pdf")
+  // }
+  
 
     return (
       <>
@@ -74,6 +101,7 @@
               <NavbarAdmin
               logoText={"Generar Reportes"}
               brandText={getActiveRoute(routes)}
+              userData={userData}
               />
             </Box>
           </Portal>
@@ -89,17 +117,21 @@
                   gap='30px'
                   mb='30px'
                   mt='30px'>
-                  <MiniStatistics
-                    startContent={
-                    <IconBox
-                        w='60px'
-                        h='60px'
-                        bg='linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)'
-                        icon={<Icon w='28px' h='28px' as={MdDownload} color='white' />}
+                    <Button
+                        // onClick={() => downloadPdf()}
+                        >
+                      <MiniStatistics
+                        startContent={
+                        <IconBox
+                            w='60px'
+                            h='60px'
+                            bg='linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)'
+                            icon={<Icon w='28px' h='28px' as={MdDownload} color='white' />}
+                          />
+                        }
+                        name='Descargar reporte en Pdf'
                       />
-                    }
-                    name='Descargar reporte en Excel'
-                  />
+                    </Button>
                   <MiniStatistics
                     startContent={
                       <IconBox

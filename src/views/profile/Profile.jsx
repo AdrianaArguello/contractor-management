@@ -4,11 +4,12 @@ import {
     useColorModeValue,
     Text,
     Grid,
-    Divider 
+    Divider,
+    Flex
   } from "@chakra-ui/react";
   import { SidebarContext } from "../../contexts/sidebarContext";
   import Sidebar from "../../components/components/sidebar/Sidebar";
-  import React, { useState } from "react";
+  import React, { useState, useEffect } from "react";
   import NavbarAdmin from "../../components/components/NavbarAdmin";
   import Footer from "../../components/components/footer/FooterAdmin";
   import General from "../../components/components/General";
@@ -16,13 +17,33 @@ import {
   import banner from '../../assets/auth/banner.png';
   import avatar from "../../assets/auth/principal-image.jpg";
   import ComplexTable from "../../components/components/ComplexTable";
+  import { getUserDetail } from '../../api/auth-request';
   import routes from "../../routes";
+  import  Card  from "../../components/components/Card";
+  import { Avatar } from "@chakra-ui/react";
 
   export default function AdminDashboard() {
     const [toggleSidebar, setToggleSidebar] = useState(false);
+    const [user, setUser] = useState();
     const textColor = useColorModeValue("navy.700", "white");
     const userData = sessionStorage.getItem("tk");
+    const textColorPrimary = useColorModeValue("secondaryGray.900", "white");
+    const textColorSecondary = "gray.400";
+    const borderColor = useColorModeValue(
+      "white !important",
+      "#111C44 !important"
+    );
 
+    useEffect( () => {
+      getAllEmployeesByContractorData();
+    },[]);
+
+    const getAllEmployeesByContractorData = async () => {
+        const res = await getUserDetail();
+        setUser(res.employees);
+    }
+
+    console.log(user)
 
     const getActiveRoute = (routes) => {
       let activeRoute = "Perfil";
@@ -108,16 +129,56 @@ import {
           "2xl": "1fr",
         }}
         gap={{ base: "20px", xl: "20px" }}>
-            <Banner
-          gridArea='1 / 1 / 2 / 2'
-          banner={banner}
-          avatar={avatar}
-          name='Adela Parkson'
-          job='Product Designer'
-          posts='17'
-          followers='9.7k'
-          following='274'
-        />
+           <Card mb={{ base: "0px", lg: "20px" }} align='center'>
+      <Box
+        bg={`url(${banner})`}
+        bgSize='cover'
+        borderRadius='16px'
+        h='131px'
+        w='100%'
+      />
+      <Avatar
+        mx='auto'
+        src={avatar}
+        h='87px'
+        w='87px'
+        mt='-43px'
+        border='4px solid'
+        borderColor={borderColor}
+      />
+      <Text color={textColorPrimary} fontWeight='bold' fontSize='xl' mt='10px'>
+        {user?.name} {user?.lastname}
+      </Text>
+      <Text color={textColorSecondary} fontSize='sm'>
+        Contratista
+      </Text>
+      <Flex w='max-content' mx='auto' mt='26px'>
+        <Flex mx='auto' me='60px' align='center' direction='column'>
+          <Text color={textColorPrimary} fontSize='2xl' fontWeight='700'>
+            {user?.adress}
+          </Text>
+          <Text color={textColorSecondary} fontSize='sm' fontWeight='400'>
+            Posts
+          </Text>
+        </Flex>
+        <Flex mx='auto' me='60px' align='center' direction='column'>
+          <Text color={textColorPrimary} fontSize='2xl' fontWeight='700'>
+            {user?.phone}
+          </Text>
+          <Text color={textColorSecondary} fontSize='sm' fontWeight='400'>
+            Followers
+          </Text>
+        </Flex>
+        <Flex mx='auto' align='center' direction='column'>
+          <Text color={textColorPrimary} fontSize='2xl' fontWeight='700'>
+            {/* {following} */}
+          </Text>
+          <Text color={textColorSecondary} fontSize='sm' fontWeight='400'>
+            Following
+          </Text>
+        </Flex>
+      </Flex>
+    </Card>
         <General
           gridArea={{ base: "2 / 1 / 3 / 2", lg: "1 / 2 / 2 / 3" }}
           minH='365px'

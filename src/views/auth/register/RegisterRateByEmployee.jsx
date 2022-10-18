@@ -6,7 +6,6 @@ import {
   Flex,
   FormLabel,
   Heading,
-  Input,
   Text,
   useColorModeValue,
   Select
@@ -16,7 +15,7 @@ import AuthLayout from "../../../layouts/themes/auth-layout/auth-layout";
 import { useParams } from "react-router-dom";
 // Assets
 import illustration from "../../../assets/dashboards/Debit.png";
-import { getAllPeriods, getAllRates } from '../../../api/auth-request';
+import { getAllRates } from '../../../api/auth-request';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from "axios";

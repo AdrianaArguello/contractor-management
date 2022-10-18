@@ -1,9 +1,7 @@
 import { 
   Portal,
   Box,
-  SimpleGrid,
   useColorModeValue,
-  Icon,
   Text,
   TableContainer,
   Table,
@@ -13,7 +11,6 @@ import {
   Th,
   Td,
   Tbody,
-  Grid,
   } from "@chakra-ui/react";
   import Card from "../../../components/components/Card"
   import { SidebarContext } from "../../../contexts/sidebarContext";
@@ -116,7 +113,7 @@ import { useNavigate } from "react-router-dom";
                   lineHeight='100%'
                   mb='20px'
                   color={textColor}>
-                  Información principal de contratistas
+                  Información principal de los empleados
                 </Text>
                 <Card
                 
