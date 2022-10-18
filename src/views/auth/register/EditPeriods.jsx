@@ -20,6 +20,7 @@ import { useParams } from "react-router-dom";
 import { getPeriodsById } from "../../../api/auth-request";
 import Swal from 'sweetalert2'
 import axios from "axios";
+import moment from 'moment'
 
 export default function EditPeriods(){
     const {id} = useParams();
@@ -37,6 +38,8 @@ export default function EditPeriods(){
     {'value': 'Activo'},
     {'value': 'Inactivo'}
   ];
+  const [tStartDate, setStartDate] = useState(new Date());
+  const [tEndDate, setEndDate] = useState(new Date());
 
     useEffect( () => {
         getPeriodsByIdData(id); 
@@ -46,6 +49,22 @@ export default function EditPeriods(){
     const getPeriodsByIdData = async (id) => {
         const res = await getPeriodsById(id)
         setType(res?.period?.status)
+        const timeStampStartDate = Date.parse(res?.period.initial_date);
+        const timeStampEndDate = Date.parse(res?.period.final_date);
+        
+
+        console.log(res?.period);
+        console.log(timeStampStartDate);
+        console.log(timeStampEndDate);
+        console.log(moment(res?.period.initial_date).format('YYYY/MM/DD'));
+        if(res?.period) {
+          console.log(new Date(moment(res?.period.initial_date).format('YYYY/MM/DD')));
+
+          setDateRange([
+            new Date(moment(res?.period.initial_date).format('YYYY/MM/DD')), new Date(moment(res?.period.final_date).format('YYYY/MM/DD'))])
+        }
+        // setStartDate(res?.period.initial_date);
+        // setEndDate(res?.period.final_date);
         // setType(res.data.charges.type)
     }
 
@@ -55,37 +74,39 @@ export default function EditPeriods(){
   
     const handleSubmit = (e) => {
         e.preventDefault();
-        addPosts(type, startDate, endDate);
+        // addPosts(type, startDate, endDate);
     }
 
 
-    const sendData = {
-        initial_date: startDate?.toISOString().split('T')[0],
-        final_date: endDate?.toISOString().split('T')[0],
-        status: type
-    }
+    // const sendData = {
+    //     initial_date: startDate?.toISOString().split('T')[0],
+    //     final_date: endDate?.toISOString().split('T')[0],
+    //     status: type
+    // }
 
-    const addPosts = () => {
-    axios.put( `http://localhost:8000/api/period/update/${id}`, sendData , config)
-    .then((response) => {
-      Swal.fire({
-        title:'Se ha registrado correctamente!',
-        icon: 'success',
-        confirmButtonText:'Continuar'
-      })
-    })
-    .catch(error => {
-      console.log(error.response.data.error)
-      Swal.fire({
-        title: '¡Error!',
-        text: 'No se ha podido registrar correctamente la contratista',
-        icon: 'error',
-        confirmButtonText: 'Continuar'
-      })
-    });
-    setType('');
-    setDateRange('');
-    }
+    // console.log('sendData',sendData);
+
+    // const addPosts = () => {
+    // axios.put( `http://localhost:8000/api/period/update/${id}`, sendData , config)
+    // .then((response) => {
+    //   Swal.fire({
+    //     title:'Se ha registrado correctamente!',
+    //     icon: 'success',
+    //     confirmButtonText:'Continuar'
+    //   })
+    // })
+    // .catch(error => {
+    //   console.log(error.response.data.error)
+    //   Swal.fire({
+    //     title: '¡Error!',
+    //     text: 'No se ha podido registrar correctamente la contratista',
+    //     icon: 'error',
+    //     confirmButtonText: 'Continuar'
+    //   })
+    // });
+    // setType('');
+    // setDateRange('');
+    // }
 
  const goBack = async () => {
   navigate('/Admin');
