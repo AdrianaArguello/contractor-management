@@ -118,6 +118,7 @@
                   mt='30px'>
                     <div
                       onClick={() => downloadPdf()}
+                      style={{cursor: 'pointer'}}
                     >
                       <MiniStatistics
                         startContent={

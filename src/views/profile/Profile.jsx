@@ -4,8 +4,8 @@ import {
     useColorModeValue,
     Text,
     Grid,
-    Divider,
-    Flex
+    Flex,
+    Icon,
   } from "@chakra-ui/react";
   import { SidebarContext } from "../../contexts/sidebarContext";
   import Sidebar from "../../components/components/sidebar/Sidebar";
@@ -13,14 +13,15 @@ import {
   import NavbarAdmin from "../../components/components/NavbarAdmin";
   import Footer from "../../components/components/footer/FooterAdmin";
   import General from "../../components/components/General";
-  import Banner from "../../components/components/Banner";
   import banner from '../../assets/auth/banner.png';
   import avatar from "../../assets/auth/principal-image.jpg";
-  import ComplexTable from "../../components/components/ComplexTable";
-  import { getUserDetail } from '../../api/auth-request';
+  import { getUserDetail, getContractorById } from '../../api/auth-request';
   import routes from "../../routes";
   import  Card  from "../../components/components/Card";
   import { Avatar } from "@chakra-ui/react";
+  import MiniStatistics from "../../components/components/MiniStatistics";
+  import IconBox from "../../components/components/IconBox";
+  import { MdDownload } from "react-icons/md";
 
   export default function AdminDashboard() {
     const [toggleSidebar, setToggleSidebar] = useState(false);
@@ -40,8 +41,13 @@ import {
 
     const getAllEmployeesByContractorData = async () => {
         const res = await getUserDetail();
-        setUser(res.employees);
-    }
+        var temp;
+        if(res?.employees.id_contractor) {
+          temp = await getContractorById(res.employees.id_contractor);
+          // setContractor(temp)
+        }
+        setUser({ "employee": res.employees, "contractor": temp.contractors});
+      }
 
     console.log(user)
 
@@ -68,6 +74,29 @@ import {
       }
       return activeRoute;
     };
+
+    function downloadPdf() {
+      const config = {headers: { Authorization: `Bearer ${userData}`,  responseType: 'application/pdf'}};
+      fetch('http://localhost:8000/create-job-letter/'+user.employee.id+'', config)
+      .then(r => r.blob())
+      .then(res => {
+        var newBlob = new Blob([res], {type: "application/pdf"})
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveOrOpenBlob(newBlob);
+          return;
+        }
+  
+        const data = window.URL.createObjectURL(newBlob);
+        var link = document.createElement('a');
+        link.href = data;
+        link.download="cartadetrabajo"+new Date().getDay()+"-"+new Date().getMonth()+"-"+new Date().getFullYear()+".pdf";
+        link.click();
+  
+        setTimeout(function(){
+          window.URL.revokeObjectURL(data);
+        }, 100);
+      })
+    }
 
     return (
       <>
@@ -107,7 +136,6 @@ import {
               minH='100vh'
               pt='50px'>
               <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-                
                 <Text
                   fontSize='22px'
                   fontWeight='700'
@@ -147,13 +175,13 @@ import {
         borderColor={borderColor}
       />
       <Text color={textColorPrimary} fontWeight='bold' fontSize='xl' mt='10px'>
-        {user?.name} {user?.lastname}
+        {user?.employee.name} {user?.employee.lastname}
       </Text>
       <Text color={textColorSecondary} fontSize='sm'>
-        Contratista
+        {user?.contractor.name}
       </Text>
       <Flex w='max-content' mx='auto' mt='26px'>
-        <Flex mx='auto' me='60px' align='center' direction='column'>
+        {/* <Flex mx='auto' me='60px' align='center' direction='column'>
           <Text color={textColorPrimary} fontSize='2xl' fontWeight='700'>
             {user?.adress}
           </Text>
@@ -171,23 +199,40 @@ import {
         </Flex>
         <Flex mx='auto' align='center' direction='column'>
           <Text color={textColorPrimary} fontSize='2xl' fontWeight='700'>
-            {/* {following} */}
+            
           </Text>
           <Text color={textColorSecondary} fontSize='sm' fontWeight='400'>
             Following
           </Text>
-        </Flex>
+        </Flex> */}
+        {user?.employee ? 
+        <div
+          onClick={() => downloadPdf()}
+          style={{cursor: 'pointer'}}
+        >
+          <MiniStatistics
+            startContent={
+            <IconBox
+                w='60px'
+                h='60px'
+                bg='linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)'
+                icon={<Icon w='28px' h='28px' as={MdDownload} color='white' />}
+              />
+            }
+            name='Descargar reporte en Pdf'
+          />
+        </div>
+        : ''}
       </Flex>
     </Card>
         <General
+          user={(user) ? user : undefined}
           gridArea={{ base: "2 / 1 / 3 / 2", lg: "1 / 2 / 2 / 3" }}
           minH='365px'
           pe='20px'
         />
 
-      </Grid>
-        <Divider />
-        <ComplexTable/>        
+      </Grid>    
               </Box>
             </Box>
           <Box>
