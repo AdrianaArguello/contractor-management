@@ -12,17 +12,13 @@
   } from "react-icons/md";
   import { SidebarContext } from "../../contexts/sidebarContext";
   import Sidebar from "../../components/components/sidebar/Sidebar";
-  import React, { useState, useEffect } from "react";
+  import React, { useState } from "react";
   import NavbarAdmin from "../../components/components/NavbarAdmin";
   import Footer from "../../components/components/footer/FooterAdmin";
   import MiniStatistics from "../../components/components/MiniStatistics";
   import IconBox from "../../components/components/IconBox";
   import routes from "../../routes";
-  import { getReportsPDf } from '../../api/auth-request';
-  import axios from "axios";
-  import { saveAs } from 'file-saver'
-
-
+  
   export default function Reports() {
     const [toggleSidebar, setToggleSidebar] = useState(false);
     const brandColor = useColorModeValue("brand.500", "white");
@@ -54,29 +50,32 @@
       return activeRoute;
     };
 
-  // useEffect( () => {
-  //   getAllEmployeesByContractorData();
-  // },[]);
+  function downloadPdf() {
+    const config = {headers: { Authorization: `Bearer ${userData}`,  responseType: 'application/pdf'}};
+    fetch('http://localhost:8000/create-pdf-file', config)
+    .then(r => r.blob())
+    .then(res => {
+      var newBlob = new Blob([res], {type: "application/pdf"})
+      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(newBlob);
+        return;
+      }
 
-  // const getPdf = async (userData) => {
-  //   return axios.get('http://localhost:8000/create-pdf-file', {
-  //     headers: {
-  //       'Content-Type': 'multipart/form-data'
-  //     },
-  //     responseType: 'arraybuffer'
-  //   })
-  // }
+      const data = window.URL.createObjectURL(newBlob);
+      var link = document.createElement('a');
+      link.href = data;
+      link.download="ReporteEmpleadosPorContratista"+new Date().getDay()+"-"+new Date().getMonth()+"-"+new Date().getFullYear()+".pdf";
+      link.click();
 
-  // async function downloadPdf() {
-  //   const { data } = await getPdf()
-  //   const blob = new Blob([data], { type: 'application/pdf' })
-  //   saveAs(blob, "tickets.pdf")
-  // }
-  
+      setTimeout(function(){
+        window.URL.revokeObjectURL(data);
+      }, 100);
+    })
+  }
 
-    return (
-      <>
-        <Box>
+  return (
+    <>
+    <Box>
       <SidebarContext.Provider
         value={{
           toggleSidebar,
@@ -117,9 +116,9 @@
                   gap='30px'
                   mb='30px'
                   mt='30px'>
-                    <Button
-                        // onClick={() => downloadPdf()}
-                        >
+                    <div
+                      onClick={() => downloadPdf()}
+                    >
                       <MiniStatistics
                         startContent={
                         <IconBox
@@ -131,20 +130,7 @@
                         }
                         name='Descargar reporte en Pdf'
                       />
-                    </Button>
-                  <MiniStatistics
-                    startContent={
-                      <IconBox
-                        w='60px'
-                        h='60px'
-                        bg={boxBg}
-                        icon={
-                          <Icon w='32px' h='32px' as={MdDownload} color={brandColor} />
-                        }
-                      />
-                    }
-                    name='Descargar reporte en PDF'
-                  />
+                    </div>
                 </SimpleGrid>
               </Box>
             </Box>
@@ -154,8 +140,7 @@
         </Box>
       </SidebarContext.Provider>
     </Box>
-       
-      </>
-    );
+    </>
+  );
   }
   

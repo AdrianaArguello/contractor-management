@@ -202,7 +202,7 @@ import NavItem from '../../../components/components/NavItem'
                     <Link to="/registerEmployee"><NavItem navSize={navSize} icon={FiBriefcase} title="Registrar empleado" /></Link>
                     <Link to="/registerPeriods"><NavItem navSize={navSize} icon={FiDollarSign} title="Registrar periodos" /></Link>
                     <Link to="/registerCharge"><NavItem navSize={navSize} icon={FiDollarSign} title="Registrar nuevo cargo" /></Link>
-                    <Link to="/reports"><NavItem navSize={navSize} icon={FiBriefcase} title="Reports" /></Link>
+                    <Link to="/reports"><NavItem navSize={navSize} icon={FiBriefcase} title="Reportes" /></Link>
                     {/* <NavItem navSize={navSize} icon={FiSettings} title="Settings" /> */}
                 </Flex>
 
