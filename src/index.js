@@ -23,6 +23,7 @@ import RegisterRates from './views/auth/register/RegisterRates';
 import EditRates from './views/auth/register/EditRates';
 import RegisterRatesByEmployee from './views/auth/register/RegisterRateByEmployee';
 import AdminEmployeeByContractor from './views/dashboard/admin/AdminEmployeeByContractor';
+import EditEmployee from './views/auth/register/EditEmployee';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -48,6 +49,7 @@ root.render(
               <Route path="/adminEmployee" element={<AdminDashboardEmployee/>} />
               <Route path="/registerRatesByEmployee/:id" element={<RegisterRatesByEmployee/>} />
               <Route path="/adminEmployeeByContractor/:id" element={<AdminEmployeeByContractor/>} />
+              <Route path="/editEmployee/:id" element={<EditEmployee/>}/>
               <Route path="/reports" element={<Reports/>} />
               <Route
                 path="*"
