@@ -30,6 +30,23 @@ export async function getUserDetail() {
         return err.response;
     }
 };
+
+export async function getEmployeeById(id) {
+    try {
+        const token = sessionStorage.getItem("tk");
+        if(token !== null){
+            const res = await axios.get(`http://localhost:8000/api/user/get/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = res.data;
+            return data;
+        }
+    }
+    catch(err){
+        return err.response;
+    }
+};
+
  
 export async function getContractorById(id) {
     try {

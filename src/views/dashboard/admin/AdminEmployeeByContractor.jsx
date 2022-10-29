@@ -14,7 +14,6 @@ import {
   import React, { useState, useEffect } from "react";
   import NavbarAdmin from "../../../components/components/NavbarAdmin";
   import Footer from "../../../components/components/footer/FooterAdmin";
-  import routes from "../../../routes";
   import {
     Flex,
     IconButton,
@@ -175,7 +174,7 @@ import NavItem from '../../../components/components/NavItem'
             <Box>
               <NavbarAdmin
               logoText={"Elca Telecomunicaciones"}
-              brandText={getActiveRoute(routes)}
+              brandText={getActiveRoute('Empleados')}
               userData={userData}
               navSize={navSize}
               />

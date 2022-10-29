@@ -28,7 +28,7 @@
   import Footer from "../../../components/components/footer/FooterAdmin";
   import MiniStatistics from "../../../components/components/MiniStatistics";
   import IconBox from "../../../components/components/IconBox";
-  import routes from "../../../routes";
+
   import {
     Flex,
     IconButton,
@@ -256,7 +256,7 @@ import NavItem from '../../../components/components/NavItem'
             <Box>
               <NavbarAdmin
               logoText={"Elca Telecomunicaciones"}
-              brandText={getActiveRoute(routes)}
+              brandText={getActiveRoute('Admin')}
               userData={userData}
               navSize={navSize}
               />

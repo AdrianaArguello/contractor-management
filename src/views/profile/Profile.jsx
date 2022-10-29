@@ -16,7 +16,6 @@ import {
   import banner from '../../assets/auth/banner.png';
   import avatar from "../../assets/auth/principal-image.jpg";
   import { getUserDetail, getContractorById } from '../../api/auth-request';
-  import routes from "../../routes";
   import  Card  from "../../components/components/Card";
   import { Avatar } from "@chakra-ui/react";
   import MiniStatistics from "../../components/components/MiniStatistics";
@@ -124,7 +123,7 @@ import {
             <Box>
               <NavbarAdmin
                 logoText={"Perfil"}
-                brandText={getActiveRoute(routes)}
+                brandText={getActiveRoute('routes')}
                 userData={userData}
               />
             </Box>

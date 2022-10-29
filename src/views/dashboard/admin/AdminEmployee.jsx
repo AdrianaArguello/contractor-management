@@ -32,7 +32,6 @@ import {
   import NavbarAdmin from "../../../components/components/NavbarAdmin";
   import Footer from "../../../components/components/footer/FooterAdmin";
   import { getAllEmployees } from '../../../api/auth-request';
-  import routes from "../../../routes";
 import { useNavigate, Link } from "react-router-dom";
 import NavItem from "../../../components/components/NavItem";
 import IconBox from "../../../components/components/IconBox";
@@ -181,7 +180,7 @@ return (
         <Box>
           <NavbarAdmin
           logoText={"Elca Telecomunicaciones"}
-          brandText={getActiveRoute(routes)}
+          brandText={getActiveRoute('routes')}
           userData={userData}
           navSize={navSize}/>
         </Box>

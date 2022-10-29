@@ -12,21 +12,27 @@ import {
   useColorModeValue,
   useColorMode,
 } from "@chakra-ui/react";
+
 // Custom Components
 import { SidebarResponsive } from "./sidebar/Sidebar";
 import PropTypes from "prop-types";
-import React from "react";
+import React, {useState, useEffect} from "react";
 // Assets
 
 import { MdNotificationsNone } from "react-icons/md";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import { FaEthereum } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
+import axios from "axios";
 // import routes from "routes.js";
 
 export default function HeaderLinks(props) {
   const { secondary, userData } = props;
+  const userTk = sessionStorage.getItem("tk");
+  const config = {headers: { Authorization: `Bearer ${userTk}` }};
   const { colorMode, toggleColorMode } = useColorMode();
+  
   // Chakra Color Mode
   const navbarIcon = useColorModeValue("gray.400", "white");
   let menuBg = useColorModeValue("white", "navy.800");
@@ -41,9 +47,56 @@ export default function HeaderLinks(props) {
     "14px 17px 40px 4px rgba(112, 144, 176, 0.06)"
   );
   let navigate = useNavigate();
+  const [exist, setExist] = useState(false);
 
   const profile = async () => {
     navigate('/profile');
+  }
+
+
+    useEffect(() => {
+    const checkToken = async () => {
+        let userToken;
+        try {
+        userToken = window.localStorage.getItem("tk");
+        if(userToken !== null){
+            setExist(true)
+        }else{
+            setExist(false)
+        }
+        }
+        catch(e) {
+        console.log(e)
+        }
+    }
+    checkToken();
+    }, [])
+
+  const handleLogOut = () => {
+    console.log('en el navbar', userTk)
+    axios.post("http://localhost:8000/api/logout", { } , config)
+    .then((response) => {
+      console.log(response)
+      Swal.fire({
+        title:'Sesión finalizada',
+        icon: 'success',
+        confirmButtonText:'Continuar'
+      })
+      setExist(false);
+      localStorage.removeItem('tk');
+      localStorage.removeItem('shoppingCart');
+      navigate('/');
+      window.location.reload(false);
+    })
+    .catch(error => {
+      console.log(error.response)
+      Swal.fire({
+        title: '¡Error!',
+        text: 'No se ha podido cerrar la sesión',
+        icon: 'error',
+        confirmButtonText: 'Continuar'
+      })
+    });
   }
 
   return (
@@ -189,7 +242,7 @@ export default function HeaderLinks(props) {
               color='red.400'
               borderRadius='8px'
               px='14px'>
-              <Text fontSize='sm'>Cerrar sesión</Text>
+                <Button onClick={() => handleLogOut()} fontSize='sm'>Cerrar sesión</Button>
             </MenuItem>
           </Flex>
         </MenuList>

@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from "react";
-
-// Chakra imports
 import {
   Box,
+  Flex, 
+  Spacer,
   Button,
-  Flex,
   FormControl,
   FormLabel,
   Heading,
@@ -13,24 +12,24 @@ import {
   useColorModeValue,
   Select
 } from "@chakra-ui/react";
-// Custom components
 import AuthLayout from "../../../layouts/themes/auth-layout/auth-layout";
 import DatePicker from "react-datepicker";
-
 import "react-datepicker/dist/react-datepicker.css";
-// Assets
 import illustration from "../../../assets/dashboards/Debit.png";
 import Swal from 'sweetalert2'
+import { useParams } from "react-router-dom";
 import axios from "axios";
-import { getCharges, getAllContractors, getRoles, getUserDetail } from "../../../api/auth-request"
+import { getCharges, getAllContractors, getRoles, getEmployeeById } from "../../../api/auth-request"
+import { useNavigate } from 'react-router-dom';
 
 export default function EditEmployee(){
-    const textColor = useColorModeValue("navy.800", "white");
-    const textColorSecondary = "gray.400";
-    const brandStars = useColorModeValue("brand.500", "brand.400");
-    const [charges, setCharges] = useState("")
-    const [contractors, setContractors] = useState("");
-    const [roles, setRoles] = useState("");
+  const {id} = useParams();
+  const textColor = useColorModeValue("navy.800", "white");
+  const textColorSecondary = "gray.400";
+  const brandStars = useColorModeValue("brand.500", "brand.400");
+  const [charges, setCharges] = useState("")
+  const [contractors, setContractors] = useState("");
+  const [roles, setRoles] = useState("");
     // const [startDate, setStartDate] = useState(new Date());
     const genders = [
       {'value': 'Mujer'},
@@ -52,6 +51,7 @@ export default function EditEmployee(){
     const [gender, setGender] = useState("");
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
+    let navigate = useNavigate();
 
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -62,26 +62,26 @@ export default function EditEmployee(){
       getChargesData();
       getAllContractorsData();
       getAllRolesData();
-      getEmployeeById();
+      getEmployeeByIdData();
     },[]);
 
-    const getEmployeeById = async () => {
-        const res = await getUserDetail();
-        if(res !== null && res !== undefined){
-          console.log(res.employees)
-            setName(res.employees?.name);
-            setLastname(res.employees?.lastname);
-            setEmail(res.employees?.email);
-            setPassword('');
-            setCharge(res.employees?.id_charge)
-            setContractor(res.employees?.id_contractor)
-            setRole(res.employees?.id_role)
-            setIdentification(res.employees?.identification);
-            setStartDate('');
-            setGender(res.employees?.gender);
-            setPhone(res.employees?.phone);
-            setAddress(res.employees?.address);
-        }
+    const getEmployeeByIdData = async () => {
+      const res = await getEmployeeById(id);
+      if(res !== null && res !== undefined){
+        console.log('res', res)
+          setName(res.employees?.name);
+          setLastname(res.employees?.lastname);
+          setEmail(res.employees?.email);
+          setPassword('');
+          setCharge(res.employees?.id_charge)
+          setContractor(res.employees?.id_contractor)
+          setRole(res.employees?.id_role)
+          setIdentification(res.employees?.identification);
+          // setStartDate('');
+          setGender(res.employees?.gender);
+          setPhone(res.employees?.phone);
+          setAddress(res.employees?.address);
+      }
     }
 
     const getChargesData = async () => {
@@ -100,7 +100,6 @@ export default function EditEmployee(){
     
     const getAllRolesData = async () => {
       const res = await getRoles();
-      console.log('roles', res)
       if(res !== null && res !== undefined){
         setRoles(res)
       }
@@ -121,8 +120,6 @@ export default function EditEmployee(){
     const handleTypeGender = e => {
       setGender(e.target.value);
     };
-    
-    console.log(contractor)
 
     const sendData = {
       name: name,
@@ -141,17 +138,16 @@ export default function EditEmployee(){
 
     
     const addPosts = () => {
-      axios.post('http://localhost:8000/api/register', sendData , config)
+      axios.put(`http://localhost:8000/api/user/update/${id}`, sendData , config)
       .then((response) => {
         Swal.fire({
-          title:'¡Bienvenido!',
-          text:'Haz ingresado exitosamente al sistema',
+          title:'¡Empleado modificado con exito!',
           icon: 'success',
           confirmButtonText:'Continuar'
         })
+        navigate('/adminEmployee');
       })
       .catch(error => {
-        console.log(error.response.data.error)
         Swal.fire({
           title: '¡Error!',
           text: 'Revisa los datos ingresados y vuelve a intentarlo',
@@ -163,9 +159,6 @@ export default function EditEmployee(){
       setLastname('');
       setEmail('');
       setPassword('');
-      setCharge('')
-      setContractor('')
-      setRole('')
       setIdentification('');
       setStartDate('');
       setGender('');
@@ -188,8 +181,8 @@ export default function EditEmployee(){
             mt={{ base: "10px", md: "5vh" }}
             flexDirection='column'>
             <Box me='auto'>
-              <Heading color={textColor} fontSize='36px' mb='10px'>
-                Registro de empleado
+              <Heading color={textColor} fontSize='30px' mb='10px'>
+                Modificar información del empleado
               </Heading>
               <Text
                 mb='36px'
@@ -212,134 +205,156 @@ export default function EditEmployee(){
               mb={{ base: "20px", md: "auto" }}>
               <FormControl>
                 <form onSubmit={handleSubmit}>
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Nombre<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant='auth'
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  type='text'
-                  placeholder='mail@simmmple.com'
-                  mb='24px'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  fontWeight='500'
-                  size='md'
-                />
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Apellido<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant='auth'
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  type='text'
-                  placeholder='mail@simmmple.com'
-                  mb='24px'
-                  fontWeight='500'
-                  value={lastname}
-                  size='md'
-                  onChange={(e) => setLastname(e.target.value)}
-                />
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'
-                  >
-                  Cedula<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant='auth'
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  type='text'
-                  placeholder='mail@simmmple.com'
-                  mb='24px'
-                  fontWeight='500'
-                  size='lg'
-                  value={identification}
-                  onChange={(e) => setIdentification(e.target.value)}
-                />
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Correo<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant='auth'
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  type='email'
-                  placeholder='mail@simmmple.com'
-                  mb='24px'
-                  fontWeight='500'
-                  value={email}
-                  size='lg'
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Fecha de nacimiento<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Genero <Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Select 
-                  isRequired={true}
-                  id="id_charge"
-                  name="id_charge"
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  mb='24px'
-                  fontWeight='500'
-                  size='lg'
-                  autoComplete="off"
-                  value={gender}
-                  onChange={handleTypeGender}
-                  placeholder='Seleccione una opción'>
-                  {genders?.length > 0 ? genders.map((gender, index) =>
-                    <option value={gender.value} key={index}>
-                      {gender.value}
-                    </option>
-                  ): ''}
-                </Select>
-                <FormLabel
+                <Flex w='100%' gap={2}>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Nombre<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Input isRequired={true}
+                      variant='auth'
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      type='text'
+                      placeholder='mail@simmmple.com'
+                      mb='24px'
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      fontWeight='500'
+                      size='md'
+                      />
+                  </Box>
+                  <Box  w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Apellido<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Input
+                      isRequired={true}
+                      variant='auth'
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      type='text'
+                      placeholder='mail@simmmple.com'
+                      mb='24px'
+                      fontWeight='500'
+                      value={lastname}
+                      size='md'
+                      onChange={(e) => setLastname(e.target.value)}
+                    />
+                  </Box>
+                </Flex>
+                <Spacer />
+                <Flex w='100%' gap={2}>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'
+                      >
+                      Cedula<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Input
+                      isRequired={true}
+                      variant='auth'
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      type='text'
+                      placeholder='mail@simmmple.com'
+                      mb='24px'
+                      fontWeight='500'
+                      size='lg'
+                      value={identification}
+                      onChange={(e) => setIdentification(e.target.value)}
+                    />
+                  </Box>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Correo<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Input
+                      isRequired={true}
+                      variant='auth'
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      type='email'
+                      placeholder='mail@simmmple.com'
+                      mb='24px'
+                      fontWeight='500'
+                      value={email}
+                      size='lg'
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </Box>
+                </Flex>
+                <Spacer />
+                <Flex w='100%' gap={2}>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Fecha de nacimiento<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+                  </Box>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Genero <Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Select 
+                      isRequired={true}
+                      id="id_charge"
+                      name="id_charge"
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      mb='24px'
+                      fontWeight='500'
+                      size='lg'
+                      autoComplete="off"
+                      value={gender}
+                      onChange={handleTypeGender}
+                      placeholder='Seleccione una opción'>
+                      {genders?.length > 0 ? genders.map((gender, index) =>
+                        <option value={gender.value} key={index}>
+                          {gender.value}
+                        </option>
+                      ): ''}
+                    </Select>
+                  </Box>
+                </Flex>
+                <Spacer />
+                <Flex w='100%' gap={2}>
+                  <Box w='50%'>
+                  <FormLabel
                   display='flex'
                   ms='4px'
                   fontSize='sm'
@@ -361,7 +376,9 @@ export default function EditEmployee(){
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                 />
-                <FormLabel
+                  </Box>
+                  <Box w='50%'>
+                  <FormLabel
                   display='flex'
                   ms='4px'
                   fontSize='sm'
@@ -383,7 +400,12 @@ export default function EditEmployee(){
                   size='lg'
                   onChange={(e) => setAddress(e.target.value)}
                 />
-                <FormLabel
+                  </Box>
+                </Flex>
+                <Spacer />
+                <Flex w='100%' gap={2}>
+                  <Box w='50%'>
+                  <FormLabel
                   display='flex'
                   ms='4px'
                   fontSize='sm'
@@ -411,7 +433,9 @@ export default function EditEmployee(){
                     </option>
                   ): ''}
                 </Select>
-                <FormLabel
+                  </Box>
+                  <Box w='50%'>
+                  <FormLabel
                   display='flex'
                   ms='4px'
                   fontSize='sm'
@@ -439,6 +463,9 @@ export default function EditEmployee(){
                     </option>
                   ): ''}
                 </Select>
+                  </Box>
+                </Flex>
+                <Spacer />
                 <FormLabel
                   display='flex'
                   ms='4px'
@@ -476,7 +503,7 @@ export default function EditEmployee(){
                   mb='24px'
                   type="submit"
                   >
-                  Registrar Empleado
+                  Editar Empleado
                 </Button>
                 </form>
               </FormControl>

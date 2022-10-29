@@ -11,6 +11,7 @@ import Footer from "../../components/components/footer/FooterAdmin";
 import NavbarLanding from "../../components/components/NavbarLanding";
 import principalImage from "../../assets/landing/imagen-principal.jpg";
 import '../../style/App.css';
+import Logo from "../../components/components/logo";
 
 export default function Landing() {
   return (
@@ -51,7 +52,7 @@ export default function Landing() {
               color="primary.800"
               textAlign={["center", "center", "left", "left"]}
             >
-              Bienvenido a Elca Telecomunicaciones
+              Bienvenido a Elca Telecomunicaciones C.A.
             </Heading>
             <Heading
               as="h2"
@@ -62,7 +63,7 @@ export default function Landing() {
               lineHeight={1.5}
               textAlign={["center", "center", "left", "left"]}
             >
-              Bienvenido a Elca Telecomunicaciones
+              Somo el desarrollo dentro o fuera del Territorio de la Republica de Venezuela de actividades en el area de telecomunicaciones y todas sus actividades conexas o relacionadas.
             </Heading>
           </Stack>
           <Box

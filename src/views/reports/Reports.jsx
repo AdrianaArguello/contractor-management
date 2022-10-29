@@ -17,7 +17,6 @@
   import Footer from "../../components/components/footer/FooterAdmin";
   import MiniStatistics from "../../components/components/MiniStatistics";
   import IconBox from "../../components/components/IconBox";
-  import routes from "../../routes";
   
   export default function Reports() {
     const [toggleSidebar, setToggleSidebar] = useState(false);
@@ -25,30 +24,6 @@
     const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
     const userData = sessionStorage.getItem("tk");
 
-
-    const getActiveRoute = (routes) => {
-      let activeRoute = "Reportes";
-      for (let i = 0; i < routes.length; i++) {
-        if (routes[i].collapse) {
-          let collapseActiveRoute = getActiveRoute(routes[i].items);
-          if (collapseActiveRoute !== activeRoute) {
-            return collapseActiveRoute;
-          }
-        } else if (routes[i].category) {
-          let categoryActiveRoute = getActiveRoute(routes[i].items);
-          if (categoryActiveRoute !== activeRoute) {
-            return categoryActiveRoute;
-          }
-        } else {
-          if (
-            window.location.href.indexOf(routes[i].layout + routes[i].path) !== -1
-          ) {
-            return routes[i].name;
-          }
-        }
-      }
-      return activeRoute;
-    };
 
   function downloadPdf() {
     const config = {headers: { Authorization: `Bearer ${userData}`,  responseType: 'application/pdf'}};
@@ -99,7 +74,7 @@
             <Box>
               <NavbarAdmin
               logoText={"Generar Reportes"}
-              brandText={getActiveRoute(routes)}
+              brandText={"Reportes"}
               userData={userData}
               />
             </Box>

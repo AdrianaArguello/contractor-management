@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
+import Logo from './logo';
 
 export default function NavbarLanding() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -29,7 +30,6 @@ export default function NavbarLanding() {
               borderRadius='inherit'
               fontWeight='bold'
               fontSize='20px'
-              _hover={{ color: { mainText } }}
               _active={{
                 bg: "inherit",
                 transform: "none",
@@ -38,8 +38,7 @@ export default function NavbarLanding() {
               _focus={{
                 boxShadow: "none",
               }}>
-              Elca
-               {/* Telecomunicaciones */}
+              <Logo/>
             </Link></Box>
           <Flex alignItems={'center'}>
             <Stack direction={'row'} spacing={7}>

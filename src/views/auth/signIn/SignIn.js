@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Box,
   Button,
@@ -20,9 +20,12 @@ import { RiEyeCloseLine } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from "axios";
+import {AuthContext} from '../../../contexts/authContext';
+
 
 function SignIn() {
   // Chakra color mode
+  const {signIn} = useContext(AuthContext);
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const brandStars = useColorModeValue("brand.500", "brand.400");
@@ -47,6 +50,7 @@ function SignIn() {
     setPosts([response.data, ...posts]);
     sessionStorage.setItem("tk", response.data.authorization.token);
     sessionStorage.setItem("userData", JSON.stringify(response.data.user));
+    signIn(response.data);
     Swal.fire({
       title:'¡Bienvenido!',
       text:'Haz ingresado exitosamente al sistema',

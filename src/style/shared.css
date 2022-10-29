@@ -1,0 +1,13 @@
+.title{
+    text-align: center;
+    bottom: 0;
+    text-decoration-line: underline;
+    font-size: 2rem;
+    color: #c43747;
+}
+
+.subtitle{
+    font-size: 0.5rem;
+    letter-spacing: 2px;
+    font-weight: 600;
+}
