@@ -74,6 +74,7 @@ export default function EditContractors(){
         icon: 'success',
         confirmButtonText:'Continuar'
       })
+      navigate('/admin');
     })
     .catch(error => {
       console.log(error.response.data.error)

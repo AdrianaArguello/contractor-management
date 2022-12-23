@@ -21,17 +21,18 @@ import React, {useState, useEffect} from "react";
 
 import { MdNotificationsNone } from "react-icons/md";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
-import { FaEthereum } from "react-icons/fa";
+import { FaAccusoft, FaEthereum } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from "axios";
 // import routes from "routes.js";
 
 export default function HeaderLinks(props) {
-  const { secondary, userData } = props;
+  const { secondary } = props;
   const userTk = sessionStorage.getItem("tk");
   const config = {headers: { Authorization: `Bearer ${userTk}` }};
   const { colorMode, toggleColorMode } = useColorMode();
+  const userData =  JSON.parse(sessionStorage.getItem("userData"));
   
   // Chakra Color Mode
   const navbarIcon = useColorModeValue("gray.400", "white");
@@ -58,7 +59,7 @@ export default function HeaderLinks(props) {
     const checkToken = async () => {
         let userToken;
         try {
-        userToken = window.localStorage.getItem("tk");
+        userToken = window.sessionStorage.getItem("tk");
         if(userToken !== null){
             setExist(true)
         }else{
@@ -73,7 +74,6 @@ export default function HeaderLinks(props) {
     }, [])
 
   const handleLogOut = () => {
-    console.log('en el navbar', userTk)
     axios.post("http://localhost:8000/api/logout", { } , config)
     .then((response) => {
       console.log(response)
@@ -83,8 +83,8 @@ export default function HeaderLinks(props) {
         confirmButtonText:'Continuar'
       })
       setExist(false);
-      localStorage.removeItem('tk');
-      localStorage.removeItem('shoppingCart');
+      sessionStorage.removeItem('tk');
+      sessionStorage.removeItem('userData');
       navigate('/');
       window.location.reload(false);
     })
@@ -107,6 +107,8 @@ export default function HeaderLinks(props) {
       bg={menuBg}
       flexWrap={secondary ? { base: "wrap", md: "nowrap" } : "unset"}
       p='10px'
+      pl='20px'
+      pr='20px'
       borderRadius='30px'
       boxShadow={shadow}>
       <Flex
@@ -125,7 +127,7 @@ export default function HeaderLinks(props) {
           w='29px'
           borderRadius='30px'
           me='7px'>
-          <Icon color={ethColor} w='9px' h='14px' as={FaEthereum} />
+          <Icon color={ethColor} w='9px' h='14px' as={FaAccusoft} />
         </Flex>
         <Text
           w='max-content'
@@ -140,44 +142,7 @@ export default function HeaderLinks(props) {
           </Text>
         </Text>
       </Flex>
-      {/* routes={routes} */}
       <SidebarResponsive />
-      <Menu>
-        <MenuButton p='0px'>
-          <Icon
-            mt='6px'
-            as={MdNotificationsNone}
-            color={navbarIcon}
-            w='18px'
-            h='18px'
-            me='10px'
-          />
-        </MenuButton>
-        <MenuList
-          boxShadow={shadow}
-          p='20px'
-          borderRadius='20px'
-          bg={menuBg}
-          border='none'
-          mt='22px'
-          me={{ base: "30px", md: "unset" }}
-          minW={{ base: "unset", md: "400px", xl: "450px" }}
-          maxW={{ base: "360px", md: "unset" }}>
-          <Flex jusitfy='space-between' w='100%' mb='20px'>
-            <Text fontSize='md' fontWeight='600' color={textColor}>
-              Notifications
-            </Text>
-            <Text
-              fontSize='sm'
-              fontWeight='500'
-              color={textColorBrand}
-              ms='auto'
-              cursor='pointer'>
-              Mark all read
-            </Text>
-          </Flex>
-        </MenuList>
-      </Menu>
       <Button
         variant='no-hover'
         bg='transparent'
@@ -200,7 +165,7 @@ export default function HeaderLinks(props) {
           <Avatar
             _hover={{ cursor: "pointer" }}
             color='white'
-            name='Adela Parkson'
+            name={userData.name}
             bg='#11047A'
             size='sm'
             w='40px'
@@ -232,17 +197,11 @@ export default function HeaderLinks(props) {
             <MenuItem
               _hover={{ bg: "none" }}
               _focus={{ bg: "none" }}
-              borderRadius='8px'
-              px='14px'>
-            <Text fontSize='sm' onClick={() => profile()}>Ver mi perfil</Text>
-            </MenuItem>
-            <MenuItem
-              _hover={{ bg: "none" }}
-              _focus={{ bg: "none" }}
               color='red.400'
               borderRadius='8px'
-              px='14px'>
-                <Button onClick={() => handleLogOut()} fontSize='sm'>Cerrar sesión</Button>
+              px='14px'
+              onClick={() => handleLogOut()}>
+                Cerrar sesión
             </MenuItem>
           </Flex>
         </MenuList>

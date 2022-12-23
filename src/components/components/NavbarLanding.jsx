@@ -22,7 +22,7 @@ export default function NavbarLanding() {
   }
   return (
     <>
-      <Box bg={useColorModeValue('gray.200', 'gray.500')} boxShadow='base' px={4}>
+      <Box bg={useColorModeValue('gray.200', '#a6b1c0d1')} boxShadow='base' px={4}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <Box><Link
               color={mainText}

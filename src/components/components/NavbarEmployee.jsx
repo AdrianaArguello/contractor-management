@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
 import AdminNavbarLinks from "./NavbarLinksAdmin";
 
-export default function AdminNavbar(props) {
+export default function AdminEmployee(props) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export default function AdminNavbar(props) {
         base: "calc(100vw - 6%)",
         md: "calc(100vw - 8%)",
         lg: "calc(100vw - 6%)",
-        xl: "calc(100vw - 350px)",
+        xl: "calc(100vw - 80px)",
         "2xl": "calc(100vw - 365px)",
       }}>
       <Flex
@@ -156,7 +156,7 @@ export default function AdminNavbar(props) {
   );
 }
 
-AdminNavbar.propTypes = {
+AdminEmployee.propTypes = {
   brandText: PropTypes.string,
   variant: PropTypes.string,
   secondary: PropTypes.bool,

@@ -12,6 +12,7 @@ import {
   InputRightElement,
   Text,
   useColorModeValue,
+  FormHelperText
 } from "@chakra-ui/react";
 import AuthLayout from "../../../layouts/themes/auth-layout/auth-layout";
 import illustration from "../../../assets/auth/principal-image.jpg";
@@ -24,7 +25,10 @@ import {AuthContext} from '../../../contexts/authContext';
 
 
 function SignIn() {
-  // Chakra color mode
+  const initialValues = { email: "", password: "" };
+  const [formValues, setFormValues] = useState(initialValues);
+  const [formErrors, setFormErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const {signIn} = useContext(AuthContext);
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
@@ -32,14 +36,35 @@ function SignIn() {
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
   let navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [posts, setPosts] = useState([]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addPosts(email, password);
- }
+    setFormErrors(validate(formValues));
+    setIsLoading(true);
+    addPosts(formValues.email, formValues.password)
+  };
+
+  const validate = (values) => {
+    const errors = {};
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    if (!values.email) {
+      errors.email = "¡El correo es requerido!";
+    } else if (!regex.test(values.email)) {
+      errors.email = "El correo no es valido";
+    }
+    if (!values.password) {
+      errors.password = "¡La contraseña es requerida!";
+    } else if (values.password.length < 4) {
+      errors.password = "!La contraseña debe poseer mas de 4 digitos¡";
+    }
+    return errors;
+  };
 
  const addPosts = (email, password) => {
   axios.post('http://localhost:8000/api/login', {
@@ -47,23 +72,24 @@ function SignIn() {
     password: password,
   })
   .then((response) => {
-    setPosts([response.data, ...posts]);
-    sessionStorage.setItem("tk", response.data.authorization.token);
     sessionStorage.setItem("userData", JSON.stringify(response.data.user));
-    signIn(response.data);
+    signIn(response.data.authorization.token);
+    setPosts([response.data, ...posts]);
     Swal.fire({
       title:'¡Bienvenido!',
       text:'Haz ingresado exitosamente al sistema',
       icon: 'success',
       confirmButtonText:'Continuar'
     })
-    var existToken = sessionStorage.getItem("tk");
-    if(existToken){
+    setIsLoading(false);
+    if(response?.data.user.id_role === 1){
       navigate('/admin');
+    }else{
+      navigate("/profile");
     }
   })
   .catch(error => {
-    console.log(error.response.data.error)
+    setIsLoading(false);
     Swal.fire({
       title: '¡Error!',
       text: 'Revisa los datos ingresados y vuelve a intentarlo',
@@ -71,11 +97,8 @@ function SignIn() {
       confirmButtonText: 'Continuar'
     })
   });
-  setEmail('');
-  setPassword('');
  }
 
- 
   return (
     <AuthLayout illustrationBackground={illustration} image={illustration}>
       <Flex
@@ -115,32 +138,33 @@ function SignIn() {
           mb={{ base: "20px", md: "auto" }}>
           <FormControl>
           <form onSubmit={handleSubmit}>
-            <FormLabel
-              display='flex'
-              ms='4px'
-              fontSize='sm'
-              fontWeight='500'
-              color={textColor}
-              mb='8px'>
-              Correo
-              <Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-              isRequired={true}
-              variant='auth'
-              fontSize='sm'
-              ms={{ base: "0px", md: "0px" }}
-              type='email'
-              placeholder='mail@simmmple.com'
-              mb='24px'
-              fontWeight='500'
-              size='lg'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              name="email"
-              id="email"
-              autoComplete="off"
-            />
+            <Box mb='20px'>
+              <FormLabel
+                display='flex'
+                ms='4px'
+                fontSize='sm'
+                fontWeight='500'
+                color={textColor}
+                mb='8px'>
+                Correo
+                <Text color={brandStars}>*</Text>
+              </FormLabel>
+              <Input
+                variant='auth'
+                fontSize='sm'
+                ms={{ base: "0px", md: "0px" }}
+                placeholder='ejemplo@gmail.com'
+                fontWeight='500'
+                size='lg'
+                value={formValues.email}
+                onChange={handleChange}
+                name="email"
+                id="email"
+                autoComplete="off"
+              />
+              <FormHelperText style={{color:'#d32222'}}>{formErrors.email}</FormHelperText>
+            </Box>
+            <Box mb='20px'>
             <FormLabel
               ms='4px'
               fontSize='sm'
@@ -152,39 +176,53 @@ function SignIn() {
             </FormLabel>
             <InputGroup size='md'>
               <Input
-                isRequired={true}
-                value={password}
                 fontSize='sm'
-                placeholder='Min. 8 characters'
-                mb='24px'
                 size='lg'
-                onChange={(e) => setPassword(e.target.value)}
+                value={formValues.password}
+                onChange={handleChange}
                 type={show ? "text" : "password"}
                 variant='auth'
                 name="password"
                 id="password"
                 autoComplete="off"
-              />
-              <InputRightElement display='flex' alignItems='center' mt='4px'>
-                <Icon
-                  color={textColorSecondary}
-                  _hover={{ cursor: "pointer" }}
-                  as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
-                  onClick={handleClick}
                 />
-              </InputRightElement>
-            </InputGroup>
-            <Button
+                <InputRightElement display='flex' alignItems='center' mt='4px'>
+                  <Icon
+                    color={textColorSecondary}
+                    _hover={{ cursor: "pointer" }}
+                    as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
+                    onClick={handleClick}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              <FormHelperText style={{color:'#d32222'}}>{formErrors.password}</FormHelperText>
+            </Box>
+            {!isLoading ? (
+              <Button
+                fontSize='sm'
+                variant='brand'
+                fontWeight='500'
+                w='100%'
+                h='50'
+                mb='24px'
+                type="submit">
+                Iniciar sesión
+              </Button>
+            ) : (
+              <Button
               fontSize='sm'
               variant='brand'
               fontWeight='500'
               w='100%'
               h='50'
               mb='24px'
-              type="submit"
-              background="#5d77a4">
+              isLoading
+              loadingText='Iniciando sesión'
+              colorScheme='teal'
+              spinnerPlacement='start'>
               Iniciar sesión
             </Button>
+            )}
           </form>
           </FormControl>
         </Flex>

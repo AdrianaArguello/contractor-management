@@ -1,6 +1,4 @@
 import React, {useState, useEffect} from "react";
-
-// Chakra imports
 import {
   Box,
   Button,
@@ -13,14 +11,12 @@ import {
   useColorModeValue,
   Select
 } from "@chakra-ui/react";
-// Custom components
 import AuthLayout from "../../../layouts/themes/auth-layout/auth-layout";
 import DatePicker from "react-datepicker";
-
 import "react-datepicker/dist/react-datepicker.css";
-// Assets
 import illustration from "../../../assets/dashboards/Debit.png";
 import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { getCharges, getAllContractors, getRoles } from "../../../api/auth-request"
 
@@ -31,7 +27,6 @@ export default function RegisterEmployee(){
     const [charges, setCharges] = useState("")
     const [contractors, setContractors] = useState("");
     const [roles, setRoles] = useState("");
-    // const [startDate, setStartDate] = useState(new Date());
     const genders = [
       {'value': 'Mujer'},
       {'value': 'Hombre'}
@@ -47,11 +42,11 @@ export default function RegisterEmployee(){
     const [contractor, setContractor] = useState("");
     const [role, setRole] = useState("");
     const [identification, setIdentification] = useState("");
-    // const [dateBirth, setdateBirth] = useState("");
     const [startDate, setStartDate] = useState(new Date());
     const [gender, setGender] = useState("");
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
+    let navigate = useNavigate();
 
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -124,11 +119,11 @@ export default function RegisterEmployee(){
       axios.post('http://localhost:8000/api/register', sendData , config)
       .then((response) => {
         Swal.fire({
-          title:'¡Bienvenido!',
-          text:'Haz ingresado exitosamente al sistema',
+          title:'¡Empleado registrado exitosamente!',
           icon: 'success',
           confirmButtonText:'Continuar'
         })
+        navigate('/admin');
       })
       .catch(error => {
         console.log(error.response.data.error)
@@ -192,224 +187,248 @@ export default function RegisterEmployee(){
               mb={{ base: "20px", md: "auto" }}>
               <FormControl>
                 <form onSubmit={handleSubmit}>
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Nombre<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant='auth'
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  type='text'
-                  placeholder='mail@simmmple.com'
-                  mb='24px'
-                  onChange={(e) => setName(e.target.value)}
-                  fontWeight='500'
-                  size='md'
-                />
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Apellido<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant='auth'
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  type='text'
-                  placeholder='mail@simmmple.com'
-                  mb='24px'
-                  fontWeight='500'
-                  size='md'
-                  onChange={(e) => setLastname(e.target.value)}
-                />
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'
-                  >
-                  Cedula<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant='auth'
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  type='text'
-                  placeholder='mail@simmmple.com'
-                  mb='24px'
-                  fontWeight='500'
-                  size='lg'
-                  onChange={(e) => setIdentification(e.target.value)}
-                />
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Correo<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant='auth'
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  type='email'
-                  placeholder='mail@simmmple.com'
-                  mb='24px'
-                  fontWeight='500'
-                  size='lg'
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Fecha de nacimiento<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Genero <Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Select 
-                  isRequired={true}
-                  id="id_charge"
-                  name="id_charge"
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  mb='24px'
-                  fontWeight='500'
-                  size='lg'
-                  autoComplete="off"
-                  onChange={handleTypeGender}
-                  placeholder='Seleccione una opción'>
-                  {genders?.length > 0 ? genders.map((gender, index) =>
-                    <option value={gender.value} key={index}>
-                      {gender.value}
-                    </option>
-                  ): ''}
-                </Select>
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Telefono<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant='auth'
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  type='text'
-                  placeholder='mail@simmmple.com'
-                  mb='24px'
-                  fontWeight='500'
-                  size='lg'
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Dirección<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant='auth'
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  type='text'
-                  placeholder='mail@simmmple.com'
-                  mb='24px'
-                  fontWeight='500'
-                  size='lg'
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Cargo <Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Select 
-                  isRequired={true}
-                  id="id_charge"
-                  name="id_charge"
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  mb='24px'
-                  fontWeight='500'
-                  size='lg'
-                  autoComplete="off"
-                  onChange={handleTypeSelect}
-                  placeholder='Seleccione una opción'>
-                  {charges?.length > 0 ? charges.map((type, index) =>
-                    <option value={type.id} key={index}>
-                      {type.type}
-                    </option>
-                  ): ''}
-                </Select>
-                <FormLabel
-                  display='flex'
-                  ms='4px'
-                  fontSize='sm'
-                  fontWeight='500'
-                  color={textColor}
-                  mb='8px'>
-                  Contratista <Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Select 
-                  isRequired={true}
-                  id="id_charge"
-                  name="id_charge"
-                  fontSize='sm'
-                  ms={{ base: "0px", md: "0px" }}
-                  mb='24px'
-                  fontWeight='500'
-                  size='lg'
-                  autoComplete="off"
-                  onChange={handleTypeSelectContractor}
-                  placeholder='Seleccione una opción'>
-                  {contractors?.length > 0 ? contractors.map((contractor, index) =>
-                    <option value={contractor.id} key={index}>
-                      {contractor.name}
-                    </option>
-                  ): ''}
-                </Select>
+                    <Flex w='100%' gap={2}>
+                      <Box w='50%'>
+                      <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Nombre<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Input
+                      isRequired={true}
+                      variant='auth'
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      type='text'
+                      mb='24px'
+                      onChange={(e) => setName(e.target.value)}
+                      fontWeight='500'
+                      size='md'
+                    />
+                  </Box>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Apellido<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Input
+                      isRequired={true}
+                      variant='auth'
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      type='text'
+                      mb='24px'
+                      fontWeight='500'
+                      size='md'
+                      onChange={(e) => setLastname(e.target.value)}/>
+                  </Box>
+                </Flex>
+                <Flex w='100%' gap={2}>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'
+                      >
+                      Cedula<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Input
+                      isRequired={true}
+                      variant='auth'
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      type='text'
+                      mb='24px'
+                      fontWeight='500'
+                      size='lg'
+                      onChange={(e) => setIdentification(e.target.value)}
+                    />
+                  </Box>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Correo<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Input
+                      isRequired={true}
+                      variant='auth'
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      type='email'
+                      placeholder='ejemplo@gmail.com'
+                      mb='24px'
+                      fontWeight='500'
+                      size='lg'
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </Box>
+                </Flex>
+                <Flex w='100%' gap={2}>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Fecha de nacimiento<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+                  </Box>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Genero <Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Select 
+                      isRequired={true}
+                      id="id_charge"
+                      name="id_charge"
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      mb='24px'
+                      fontWeight='500'
+                      size='lg'
+                      autoComplete="off"
+                      onChange={handleTypeGender}
+                      placeholder='Seleccione una opción'>
+                      {genders?.length > 0 ? genders.map((gender, index) =>
+                        <option value={gender.value} key={index}>
+                          {gender.value}
+                        </option>
+                      ): ''}
+                    </Select>
+                  </Box>
+                </Flex>
+                <Flex  w='100%' gap={2}>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Telefono<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Input
+                      isRequired={true}
+                      variant='auth'
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      type='text'
+                      mb='24px'
+                      fontWeight='500'
+                      size='lg'
+                      onChange={(e) => setPhone(e.target.value)}
+                    />
+                  </Box>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Dirección<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Input
+                      isRequired={true}
+                      variant='auth'
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      type='text'
+                      mb='24px'
+                      fontWeight='500'
+                      size='lg'
+                      onChange={(e) => setAddress(e.target.value)}
+                    />
+                  </Box>
+                </Flex>
+                <Flex w='100%' gap={2}>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Cargo <Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Select 
+                      isRequired={true}
+                      id="id_charge"
+                      name="id_charge"
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      mb='24px'
+                      fontWeight='500'
+                      size='lg'
+                      autoComplete="off"
+                      onChange={handleTypeSelect}
+                      placeholder='Seleccione una opción'>
+                      {charges?.length > 0 ? charges.map((type, index) =>
+                        <option value={type.id} key={index}>
+                          {type.type}
+                        </option>
+                      ): ''}
+                    </Select>
+                  </Box>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Contratista <Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Select 
+                      isRequired={true}
+                      id="id_charge"
+                      name="id_charge"
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      mb='24px'
+                      fontWeight='500'
+                      size='lg'
+                      autoComplete="off"
+                      onChange={handleTypeSelectContractor}
+                      placeholder='Seleccione una opción'>
+                      {contractors?.length > 0 ? contractors.map((contractor, index) =>
+                        <option value={contractor.id} key={index}>
+                          {contractor.name}
+                        </option>
+                      ): ''}
+                    </Select>
+                  </Box>
+                </Flex>
                 <FormLabel
                   display='flex'
                   ms='4px'
@@ -437,6 +456,25 @@ export default function RegisterEmployee(){
                     </option>
                   ): ''}
                 </Select>
+                <FormLabel
+                display='flex'
+                ms='4px'
+                fontSize='sm'
+                fontWeight='500'
+                color={textColor}
+                mb='8px'>
+                Contraseña<Text color={brandStars}>*</Text>
+              </FormLabel>
+              <Input
+                isRequired={true}
+                variant='auth'
+                fontSize='sm'
+                ms={{ base: "0px", md: "0px" }}
+                type='text'
+                mb='24px'
+                onChange={(e) => setPassword(e.target.value)}
+                fontWeight='500'
+                size='md'/>
                 <Button
                   fontSize='sm'
                   variant='brand'

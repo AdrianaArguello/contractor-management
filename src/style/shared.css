@@ -1,13 +1,14 @@
 .title{
-    text-align: center;
-    bottom: 0;
-    text-decoration-line: underline;
-    font-size: 2rem;
-    color: #c43747;
+  text-align: center;
+  bottom: 0;
+  letter-spacing: 1.5px;
+  text-decoration-line: underline;
+  font-size: 25px;
+  color: #a51122;
 }
 
 .subtitle{
-    font-size: 0.5rem;
-    letter-spacing: 2px;
-    font-weight: 600;
+  font-size: .3rem;
+  letter-spacing: 1.3px;
+  font-weight: 600;
 }

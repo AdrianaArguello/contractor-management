@@ -64,7 +64,7 @@ export default function EditRates(){
     axios.put( `http://localhost:8000/api/rate/update/${id}`, sendData , config)
     .then((response) => {
       Swal.fire({
-        title:'Se ha registrado correctamente!',
+        title:'Se ha modificado correctamente!',
         icon: 'success',
         confirmButtonText:'Continuar'
       })
@@ -73,7 +73,7 @@ export default function EditRates(){
       console.log(error.response.data.error)
       Swal.fire({
         title: '¡Error!',
-        text: 'No se ha podido registrar correctamente la contratista',
+        text: 'No se ha podido modificar correctamente la tarifa',
         icon: 'error',
         confirmButtonText: 'Continuar'
       })

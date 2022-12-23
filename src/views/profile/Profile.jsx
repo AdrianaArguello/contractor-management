@@ -7,10 +7,8 @@ import {
     Flex,
     Icon,
   } from "@chakra-ui/react";
-  import { SidebarContext } from "../../contexts/sidebarContext";
-  import Sidebar from "../../components/components/sidebar/Sidebar";
   import React, { useState, useEffect } from "react";
-  import NavbarAdmin from "../../components/components/NavbarAdmin";
+  import AdminEmployee from "../../components/components/NavbarEmployee";
   import Footer from "../../components/components/footer/FooterAdmin";
   import General from "../../components/components/General";
   import banner from '../../assets/auth/banner.png';
@@ -23,7 +21,6 @@ import {
   import { MdDownload } from "react-icons/md";
 
   export default function AdminDashboard() {
-    const [toggleSidebar, setToggleSidebar] = useState(false);
     const [user, setUser] = useState();
     const textColor = useColorModeValue("navy.700", "white");
     const userData = sessionStorage.getItem("tk");
@@ -100,12 +97,6 @@ import {
     return (
       <>
         <Box>
-      <SidebarContext.Provider
-        value={{
-          toggleSidebar,
-          setToggleSidebar,
-        }}>
-        <Sidebar/>
         <Box
           float='right'
           minHeight='100vh'
@@ -113,18 +104,19 @@ import {
           overflow='auto'
           position='relative'
           maxHeight='100%'
-          w={{ base: "100%", xl: "calc( 100% - 290px )" }}
-          maxWidth={{ base: "100%", xl: "calc( 100% - 290px )" }}
+          w={{ base: "100%", xl: "100%" }}
+          maxWidth={{ base: "100%", xl: "100%" }}
           transition='all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)'
           transitionDuration='.2s, .2s, .35s'
           transitionProperty='top, bottom, width'
           transitionTimingFunction='linear, linear, ease'>
           <Portal>
             <Box>
-              <NavbarAdmin
+              <AdminEmployee
                 logoText={"Perfil"}
                 brandText={getActiveRoute('routes')}
                 userData={userData}
+                navSize='large'
               />
             </Box>
           </Portal>
@@ -238,7 +230,6 @@ import {
             <Footer />
           </Box>
         </Box>
-      </SidebarContext.Provider>
     </Box>
       </>
     );

@@ -38,10 +38,11 @@
 } from '@chakra-ui/react'
 import {
     FiMenu,
-    FiHome,
     FiUser,
-    FiDollarSign,
+    FiGlobe,
     FiBriefcase,
+    FiUsers,
+    FiClock
 } from 'react-icons/fi'
 import { Link, useNavigate } from 'react-router-dom';
 import { getCharges, getCounts, deletePeriodById, deleteContractors, deleteChargesById, getAllEmployeesByContractor,getAllPeriods, getAllRates } from '../../../api/auth-request';
@@ -155,7 +156,6 @@ import NavItem from '../../../components/components/NavItem'
     }
 
     const goToEmployees = async (idContractor) => {
-      console.log('envio el id', idContractor)
       navigate( `/adminEmployeeByContractor/${idContractor}`)
     }
 
@@ -197,13 +197,11 @@ import NavItem from '../../../components/components/NavItem'
                               changeNavSize("small")
                         }}
                     />
-                    <Link to="/adminEmployee"><NavItem navSize={navSize} icon={FiHome} title="Ver Empleados" /></Link>
-                    <Link to="/registerContractor"><NavItem navSize={navSize} icon={FiUser} title="Registrar contratista"/></Link>
-                    <Link to="/registerEmployee"><NavItem navSize={navSize} icon={FiBriefcase} title="Registrar empleado" /></Link>
-                    <Link to="/registerPeriods"><NavItem navSize={navSize} icon={FiDollarSign} title="Registrar periodos" /></Link>
-                    <Link to="/registerCharge"><NavItem navSize={navSize} icon={FiDollarSign} title="Registrar nuevo cargo" /></Link>
-                    <Link to="/reports"><NavItem navSize={navSize} icon={FiBriefcase} title="Reportes" /></Link>
-                    {/* <NavItem navSize={navSize} icon={FiSettings} title="Settings" /> */}
+                    <Link to="/adminEmployee"><NavItem navSize={navSize} icon={FiUsers} title="Ver Empleados" /></Link>
+                    <Link to="/registerContractor"><NavItem navSize={navSize} icon={FiBriefcase} title="Registrar contratista"/></Link>
+                    <Link to="/registerEmployee"><NavItem navSize={navSize} icon={FiUser} title="Registrar empleado" /></Link>
+                    <Link to="/registerPeriods"><NavItem navSize={navSize} icon={FiClock} title="Registrar periodos" /></Link>
+                    <Link to="/registerCharge"><NavItem navSize={navSize} icon={FiGlobe} title="Registrar nuevo cargo" /></Link>
                 </Flex>
 
                 <Flex
@@ -218,7 +216,6 @@ import NavItem from '../../../components/components/NavItem'
                         <Avatar size="sm" src="avatar-1.jpg" />
                         <Flex flexDir="column" ml={4} display={navSize === "small" ? "none" : "flex"}>
                             <Heading as="h3" size="sm">{userData.name} {userData.lastname}</Heading>
-                            <Text color="gray">Admin</Text>
                         </Flex>
                     </Flex>
                 </Flex>
@@ -236,8 +233,8 @@ import NavItem from '../../../components/components/NavItem'
           {
             base: "calc(100vw - 6%)",
             md: "calc(100vw - 8%)",
-            lg: "calc(100vw - 6%)",
-            xl: "calc(100vw - 170px)",
+            lg: "calc(100vw - 5%)",
+            xl: "calc(100vw - 120px)",
             "2xl": "calc(100vw - 365px)",
           }: {
             base: "calc(100vw - 3%)",
@@ -246,8 +243,6 @@ import NavItem from '../../../components/components/NavItem'
             xl: "calc(100vw - 300px)",
             "2xl": "calc(100vw - 365px)",
           }}
-          // w={ navSize === "small" ? {base: "100%", xl: "calc( 100% - 100px )"} : {base: "100%", xl: "calc( 100% - 10px )"} }
-          // maxWidth={navSize === "small" ? { base: "100%", xl: "calc( 100% - 100px )" } : { base: "50%", xl: "calc( 100% - 290px )" } }
           transition='all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)'
           transitionDuration='.2s, .2s, .35s'
           transitionProperty='top, bottom, width'
@@ -257,7 +252,6 @@ import NavItem from '../../../components/components/NavItem'
               <NavbarAdmin
               logoText={"Elca Telecomunicaciones"}
               brandText={getActiveRoute('Admin')}
-              userData={userData}
               navSize={navSize}
               />
             </Box>
@@ -344,7 +338,7 @@ import NavItem from '../../../components/components/NavItem'
                     color='gray.400'>Tipo</Th>
                     <Th align='center'
                     fontSize={{ sm: "10px", lg: "12px" }}
-                    color='gray.400'>Ver Empleados</Th>
+                    color='gray.400'> </Th>
                     <Th align='center'
                     fontSize={{ sm: "10px", lg: "12px" }}
                     color='gray.400'> </Th>
@@ -366,7 +360,9 @@ import NavItem from '../../../components/components/NavItem'
                           fontWeight='500'
                           h='50'
                           type="button"
-                          onClick={() => editContractor(contractor.id)}>
+                          onClick={() => editContractor(contractor.id)}
+                          style={{backgroundColor:'#279df4'}}
+                          >
                           Editar
                         </Button>
                       </Td>
@@ -379,6 +375,7 @@ import NavItem from '../../../components/components/NavItem'
                           h='50'
                           type="button"
                           onClick={() => deleteContractorsData(contractor?.id)}
+                          style={{backgroundColor:'#a31414'}}
                           >
                           Eliminar
                         </Button>
@@ -449,7 +446,9 @@ import NavItem from '../../../components/components/NavItem'
                           fontWeight='500'
                           h='50'
                           type="button"
-                          onClick={() => editPeriod(period.id)}>
+                          onClick={() => editPeriod(period.id)}
+                          style={{backgroundColor:'#279df4'}}
+                          >
                           Editar
                         </Button>
                       </Td>
@@ -462,6 +461,7 @@ import NavItem from '../../../components/components/NavItem'
                           h='50'
                           type="button"
                           onClick={() => deletePeriodData(period.id)}
+                          style={{backgroundColor:'#a31414'}}
                           >
                           Eliminar
                         </Button>
@@ -537,7 +537,9 @@ import NavItem from '../../../components/components/NavItem'
                           fontWeight='500'
                           h='50'
                           type="button"
-                          onClick={() => editCharge(charge.id)}>
+                          onClick={() => editCharge(charge.id)}
+                          style={{backgroundColor:'#279df4'}}
+                          >
                           Editar
                         </Button>
                       </Td>
@@ -550,6 +552,7 @@ import NavItem from '../../../components/components/NavItem'
                           h='50'
                           type="button"
                           onClick={() => deleteChargeData(charge.id)}
+                          style={{backgroundColor:'#a31414'}}
                           >
                           Eliminar
                         </Button>
@@ -601,7 +604,9 @@ import NavItem from '../../../components/components/NavItem'
                           fontWeight='500'
                           h='50'
                           type="button"
-                          onClick={() => editRate(rates.id)}>
+                          onClick={() => editRate(rates.id)}
+                          style={{backgroundColor:'#279df4'}}
+                          >
                           Editar
                         </Button>
                       </Td>

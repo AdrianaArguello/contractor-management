@@ -34,13 +34,11 @@ export async function getUserDetail() {
 export async function getEmployeeById(id) {
     try {
         const token = sessionStorage.getItem("tk");
-        if(token !== null){
-            const res = await axios.get(`http://localhost:8000/api/user/get/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            const data = res.data;
-            return data;
-        }
+        const res = await axios.get(`http://localhost:8000/api/user/get/${id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = res.data;
+        return data;
     }
     catch(err){
         return err.response;
@@ -51,13 +49,11 @@ export async function getEmployeeById(id) {
 export async function getContractorById(id) {
     try {
         const token = sessionStorage.getItem("tk");
-        if(token !== null){
-            const res = await axios.get(`http://localhost:8000/api/contractors/get/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            const data = res.data;
-            return data;
-        }
+        const res = await axios.get(`http://localhost:8000/api/contractors/get/${id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = res.data;
+        return data;
     }
     catch(err){
         return err.response;
@@ -67,13 +63,11 @@ export async function getContractorById(id) {
 export async function getAllContractors() {
     try {
         const token = sessionStorage.getItem("tk");
-        if(token !== null){
-            const res = await axios.get("http://localhost:8000/api/contractors/get", {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            const data = res.data;
-            return data;
-        }
+        const res = await axios.get("http://localhost:8000/api/contractors/get", {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = res.data;
+        return data;
     }
     catch(err){
         return err.response;
@@ -83,18 +77,16 @@ export async function getAllContractors() {
 export async function deleteContractors(id) {
     try {
         const token = sessionStorage.getItem("tk");
-        if(token !== null){
-            const res = await axios.delete(`http://localhost:8000/api/contractors/delete/${id}`,{
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            const data = res.data;
-            Swal.fire({
-                title:'¡Se ha eliminado correctamente!',
-                icon: 'success',
-                confirmButtonText:'Continuar'
-            })
-            return data;
-        }
+        const res = await axios.delete(`http://localhost:8000/api/contractors/delete/${id}`,{
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = res.data;
+        Swal.fire({
+            title:'¡Se ha eliminado correctamente!',
+            icon: 'success',
+            confirmButtonText:'Continuar'
+        })
+        return data;
     }
     catch(err){
         Swal.fire({
@@ -155,7 +147,6 @@ export async function getEmployeeByIdContractor(id) {
     }
 };
 
-// charges 
 
 export async function getCharges() {
     try {

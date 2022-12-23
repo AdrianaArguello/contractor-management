@@ -1,6 +1,6 @@
 import '../../style/shared.css';
 import {
-  Text,
+  Box,
   useColorModeValue,
   useBreakpointValue,
 } from '@chakra-ui/react';
@@ -8,13 +8,12 @@ import {
 function Logo(){
   return(
     <>
-      <Text
-      textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-      fontFamily={'heading'}
-      color={useColorModeValue('gray.800', 'white')}>
+      <Box
+        textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
+        color={useColorModeValue('gray.800', 'white')}>
         <h4 className="title">ELCA</h4>
         <h5 className="subtitle">Telecomunicaciones</h5>
-      </Text>
+      </Box>
     </>
   )
 }

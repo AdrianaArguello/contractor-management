@@ -68,45 +68,45 @@ export default function EditPeriods(){
         // setType(res.data.charges.type)
     }
 
-  const handleTypeSelect = e => {
-    setType(e.target.value);
-  };
+    const handleTypeSelect = e => {
+      setType(e.target.value);
+    };
   
     const handleSubmit = (e) => {
-        e.preventDefault();
-        // addPosts(type, startDate, endDate);
+      e.preventDefault();
+      addPosts(type, startDate, endDate);
     }
 
-
-    // const sendData = {
-    //     initial_date: startDate?.toISOString().split('T')[0],
-    //     final_date: endDate?.toISOString().split('T')[0],
-    //     status: type
-    // }
+    const sendData = {
+        initial_date: startDate?.toISOString().split('T')[0],
+        final_date: endDate?.toISOString().split('T')[0],
+        status: type
+    }
 
     // console.log('sendData',sendData);
 
-    // const addPosts = () => {
-    // axios.put( `http://localhost:8000/api/period/update/${id}`, sendData , config)
-    // .then((response) => {
-    //   Swal.fire({
-    //     title:'Se ha registrado correctamente!',
-    //     icon: 'success',
-    //     confirmButtonText:'Continuar'
-    //   })
-    // })
-    // .catch(error => {
-    //   console.log(error.response.data.error)
-    //   Swal.fire({
-    //     title: '¡Error!',
-    //     text: 'No se ha podido registrar correctamente la contratista',
-    //     icon: 'error',
-    //     confirmButtonText: 'Continuar'
-    //   })
-    // });
-    // setType('');
-    // setDateRange('');
-    // }
+    const addPosts = () => {
+    axios.put( `http://localhost:8000/api/period/update/${id}`, sendData , config)
+    .then((response) => {
+      Swal.fire({
+        title:'Se ha modificado correctamente!',
+        icon: 'success',
+        confirmButtonText:'Continuar'
+      })
+      navigate('/admin')
+    })
+    .catch(error => {
+      console.log(error.response.data.error)
+      Swal.fire({
+        title: '¡Error!',
+        text: 'No se ha podido registrar correctamente la contratista',
+        icon: 'error',
+        confirmButtonText: 'Continuar'
+      })
+    });
+    setType('');
+    setDateRange('');
+    }
 
  const goBack = async () => {
   navigate('/Admin');
@@ -196,8 +196,9 @@ return (
             w='100%'
             h='50'
             mb='24px'
+            mt='24px'
             type="submit">
-            Registrar
+            Modificar
           </Button>
         </form>
           <Button

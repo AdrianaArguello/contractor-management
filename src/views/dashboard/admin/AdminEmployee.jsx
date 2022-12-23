@@ -21,9 +21,10 @@ import {
   } from "@chakra-ui/react";
   import {
     FiMenu,
-    FiHome,
+    FiClock,
+    FiGlobe,
     FiUser,
-    FiDollarSign,
+    FiUsers,
     FiBriefcase,
 } from 'react-icons/fi'
   import Card from "../../../components/components/Card"
@@ -88,7 +89,8 @@ import { MdDownload } from "react-icons/md";
   }
 
   function downloadPdf() {
-    const config = {headers: { Authorization: `Bearer ${userData}`,  responseType: 'application/pdf'}};
+    const token = sessionStorage.getItem("tk");
+    const config = {headers: { Authorization: `Bearer ${token}`,  responseType: 'application/pdf'}};
     fetch('http://localhost:8000/create-pdf-file', config)
     .then(r => r.blob())
     .then(res => {
@@ -113,8 +115,8 @@ import { MdDownload } from "react-icons/md";
 return (
   <>
   <SidebarContext.Provider value={{ toggleSidebar, setToggleSidebar}}>
-    <Box display={{ sm: "none", xl: "block" }} position='fixed' minH='100%' left="5">
-      <Flex
+  <Box display={{ sm: "none", xl: "block" }} position='fixed' minH='100%' left="5" >
+    <Flex
         pos="sticky"
         h="95%"
         marginTop="2.5vh"
@@ -123,14 +125,15 @@ return (
         w={navSize === "small" ? "100px" : "250px"}
         flexDir="column"
         justifyContent="space-between">
-          <Flex
+        <Flex
             p="5%"
             flexDir="column"
             w="100%"
             alignItems={navSize === "small" ? "center" : "flex-start"}
-            as="nav">
-              <IconButton 
-                style={{transition: "all 0.5s"}}
+            as="nav"
+        >
+            <IconButton
+              style={{transition: "all 0.5s"}}
                 background="none"
                 mt={2}
                 _hover={{ background: 'none' }}
@@ -140,32 +143,31 @@ return (
                       changeNavSize("large")
                   else
                       changeNavSize("small")
-                }}/>
-                <Link to="/adminEmployee"><NavItem navSize={navSize} icon={FiHome} title="Ver Empleados" /></Link>
-                <Link to="/registerContractor"><NavItem navSize={navSize} icon={FiUser} title="Registrar contratista"/></Link>
-                <Link to="/registerEmployee"><NavItem navSize={navSize} icon={FiBriefcase} title="Registrar empleado" /></Link>
-                <Link to="/registerPeriods"><NavItem navSize={navSize} icon={FiDollarSign} title="Registrar periodos" /></Link>
-                <Link to="/registerCharge"><NavItem navSize={navSize} icon={FiDollarSign} title="Registrar nuevo cargo" /></Link>
-                <Link to="/reports"><NavItem navSize={navSize} icon={FiBriefcase} title="Reportes" /></Link>
-          </Flex>
+                }}
+            />
+            <Link to="/adminEmployee"><NavItem navSize={navSize} icon={FiUsers} title="Ver Empleados" /></Link>
+            <Link to="/registerContractor"><NavItem navSize={navSize} icon={FiBriefcase} title="Registrar contratista"/></Link>
+            <Link to="/registerEmployee"><NavItem navSize={navSize} icon={FiUser} title="Registrar empleado" /></Link>
+            <Link to="/registerPeriods"><NavItem navSize={navSize} icon={FiClock} title="Registrar periodos" /></Link>
+            <Link to="/registerCharge"><NavItem navSize={navSize} icon={FiGlobe} title="Registrar nuevo cargo" /></Link>
+        </Flex>
 
-          <Flex
-              p="5%"
-              flexDir="column"
-              w="100%"
-              alignItems={navSize === "small" ? "center" : "flex-start"}
-              mb={4}
-          >
-              <Divider display={navSize === "small" ? "none" : "flex"} />
-              <Flex mt={4} align="center">
-                  <Avatar size="sm" src="avatar-1.jpg" />
-                  <Flex flexDir="column" ml={4} display={navSize === "small" ? "none" : "flex"}>
-                      <Heading as="h3" size="sm">{userData.name} {userData.lastname}</Heading>
-                      <Text color="gray">Admin</Text>
-                  </Flex>
-              </Flex>
-          </Flex>
-      </Flex>
+        <Flex
+            p="5%"
+            flexDir="column"
+            w="100%"
+            alignItems={navSize === "small" ? "center" : "flex-start"}
+            mb={4}
+        >
+            <Divider display={navSize === "small" ? "none" : "flex"} />
+                <Flex mt={4} align="center">
+                    <Avatar size="sm" src="avatar-1.jpg" />
+                    <Flex flexDir="column" ml={4} display={navSize === "small" ? "none" : "flex"}>
+                        <Heading as="h3" size="sm">{userData.name} {userData.lastname}</Heading>
+                    </Flex>
+                </Flex>
+            </Flex>
+        </Flex>
     </Box>
     <Box
       float='right'

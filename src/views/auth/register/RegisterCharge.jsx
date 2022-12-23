@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 // Chakra imports
 import {
   Box,
@@ -6,9 +6,10 @@ import {
   Flex,
   FormLabel,
   Heading,
-  Input,
   Text,
   useColorModeValue,
+  FormControl,
+  Select
 } from "@chakra-ui/react";
 // Custom components
 import AuthLayout from "../../../layouts/themes/auth-layout/auth-layout";
@@ -17,36 +18,64 @@ import illustration from "../../../assets/dashboards/Debit.png";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from "axios";
+import { getCharges } from "../../../api/auth-request"
 
 export default function RegisterCharge(){
+  const [isLoading, setIsLoading] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [chargesdata, setCharges] = useState([]);
+  const [existCharges, setChargesExists] = useState([]);
+  const charges = [
+    {'value': 'Supervisor'},
+    {'value': 'Vigilante'},
+    {'value': 'Coordinador'},
+    {'value': 'Fontanero'}
+  ];
+
+  useEffect( () => {
+    getChargesData();
+  },[]);
+
+  const handleChange = (e) => {
+    setCharges(e.target.value)
+  };
+
+  const getChargesData = async () => {
+    const res = await getCharges();
+    if(res !== null && res !== undefined){
+      setChargesExists(res)
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    addPosts(chargesdata)
+  };
+
   const textColor = useColorModeValue("navy.800", "white");
   const textColorSecondary = "gray.400";
   const brandStars = useColorModeValue("brand.500", "brand.400");
   let navigate = useNavigate();
-  const [type, setType] = useState("");
   const userData = sessionStorage.getItem("tk");
   const config = {headers: { Authorization: `Bearer ${userData}` }};
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    addPosts(type);
-  }
-
-  const sendData = {
-    type: type
-  }
-
-  const addPosts = () => {
-    axios.post('http://localhost:8000/api/charges/create', sendData , config)
+  const addPosts = (type) => {
+    axios.post('http://localhost:8000/api/charges/create', {
+      type: type
+    }, config)
     .then((response) => {
+      setPosts([response.data, ...posts]);
       Swal.fire({
         title:'Se ha registrado correctamente!',
         icon: 'success',
         confirmButtonText:'Continuar'
       })
+      setIsLoading(false);
+      navigate('/Admin');
     })
     .catch(error => {
-      console.log(error.response.data.error)
+      setIsLoading(false);
       Swal.fire({
         title: '¡Error!',
         text: 'No se ha podido registrar correctamente la contratista',
@@ -54,7 +83,6 @@ export default function RegisterCharge(){
         confirmButtonText: 'Continuar'
       })
     });
-  setType('');
  }
 
  const goBack = async () => {
@@ -88,7 +116,6 @@ return (
           Ingresa los datos necesarios para poder registrar la contratista!
         </Text>
       </Box>
-
       <Flex
         zIndex='2'
         direction='column'
@@ -99,42 +126,67 @@ return (
         mx={{ base: "auto", lg: "unset" }}
         me='auto'
         mb={{ base: "20px", md: "auto" }}>
-        <form onSubmit={handleSubmit}>
-          <FormLabel
-            display='flex'
-            ms='4px'
-            fontSize='sm'
-            fontWeight='500'
-            color={textColor}
-            mb='8px'>
-            Nombre<Text color={brandStars}>*</Text>
-          </FormLabel>
-          <Input
-            isRequired={true}
-            variant='auth'
-            fontSize='sm'
-            ms={{ base: "0px", md: "0px" }}
-            type='text'
-            mb='24px'
-            fontWeight='500'
-            size='lg'
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            name="name"
-            id="name"
-            autoComplete="off"
-          />
-          <Button
-            fontSize='sm'
-            variant='brand'
-            fontWeight='500'
-            w='100%'
-            h='50'
-            mb='24px'
-            type="submit">
-            Registrar
-          </Button>
-        </form>
+        <FormControl>
+          <form onSubmit={handleSubmit}>
+            <Box mb='24px'>
+            <FormLabel
+              display='flex'
+              ms='4px'
+              fontSize='sm'
+              fontWeight='500'
+              color={textColor}
+              mb='8px'>
+              Nombre<Text color={brandStars}>*</Text>
+            </FormLabel>
+            <Select 
+              isRequired={true}
+              id="id_charge"
+              name="id_charge"
+              fontSize='sm'
+              ms={{ base: "0px", md: "0px" }}
+              mb='24px'
+              fontWeight='500'
+              size='lg'
+              autoComplete="off"
+              onChange={handleChange}
+              placeholder='Seleccione una opción'>
+              {charges?.length > 0 ? charges.map((charges, index) =>
+                <option value={charges.value} key={index}>
+                  {charges.value}
+                </option>
+              ): ''}
+            </Select>
+            </Box>
+            {!isLoading ? (
+                <Button
+                  fontSize='sm'
+                  variant='brand'
+                  fontWeight='500'
+                  w='100%'
+                  h='50'
+                  mb='24px'
+                  type="submit"
+                  background="#5d77a4">
+                  Registrar
+                </Button>
+              ) : (
+                <Button
+                fontSize='sm'
+                variant='brand'
+                fontWeight='500'
+                w='100%'
+                h='50'
+                mb='24px'
+                background="#5d77a4"
+                isLoading
+                loadingText='Iniciando sesión'
+                colorScheme='teal'
+                spinnerPlacement='start'>
+                Registrando cargo
+              </Button>
+              )}
+          </form>
+        </FormControl>
           <Button
             fontSize='sm'
             variant='brand'

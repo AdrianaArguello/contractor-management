@@ -14,7 +14,6 @@ import { Spinner } from '@chakra-ui/react'
 import RegisterContractors from './views/auth/register/RegisterContractors';
 import RegisterEmployee from './views/auth/register/RegisterEmployee';
 import AdminDashboardEmployee from './views/dashboard/admin/AdminEmployee';
-import Reports from './views/reports/Reports';
 import Landing from './views/landing/landing';
 import RegisterCharge from './views/auth/register/RegisterCharge';
 import EditContractors from './views/auth/register/EditContractors';
@@ -48,7 +47,8 @@ export default function App() {
       case 'LOGIN':
         return {
           ...prevState,
-          token: action.token
+          token: action.token,
+          userData: action.userData
         }
       case 'LOGOUT':
         return {
@@ -59,12 +59,13 @@ export default function App() {
   }
 
   const [loginState, dispatch] = useReducer(loginReducer, initialLoginState);
+  const userData = JSON.parse(sessionStorage.getItem('userData'));
 
   const authContext = React.useMemo(
     () => ({
       signIn: async data => {
         try {
-          window.localStorage.setItem("tk", data);
+          window.sessionStorage.setItem("tk", data);
         }
         catch(e) {
           console.log(e)
@@ -72,7 +73,7 @@ export default function App() {
         dispatch({type: 'LOGIN', token: data});
       },
       signOut: () => {
-        window.localStorage.removeItem("tk");
+        window.sessionStorage.removeItem("tk");
         dispatch({type: 'LOGOUT', token: null});
       }
     }),
@@ -83,7 +84,7 @@ export default function App() {
     const checkToken = async () => {
       let userToken;
       try {
-        userToken = window.localStorage.getItem("tk");
+        userToken = window.sessionStorage.getItem("tk");
       }
       catch(e) {
         console.log(e)
@@ -93,11 +94,11 @@ export default function App() {
     checkToken();
   }, [])
 
-
   return (
     <ChakraProvider theme={theme}>
       <React.StrictMode>
       <ThemeEditorProvider>
+        <AuthContext.Provider value={authContext}>
        {
         (loginState.isLoading) ? <>
         <div style={{
@@ -115,7 +116,6 @@ export default function App() {
           </div>
           </> :
           <>
-          <AuthContext.Provider value={authContext}>
             <BrowserRouter>
               <Routes>
                 {
@@ -130,36 +130,40 @@ export default function App() {
                         </main>
                       } />
                   </> : <>
-                  <Route path="/admin" element={<AdminDashboard/>} />
-                  <Route path="/profile" element={<Profile/>} />
-                  <Route path="/registerContractor" element={<RegisterContractors/>} />
-                  <Route path="/editContractors/:id" element={<EditContractors/>} />
-                  <Route path="/registerEmployee" element={<RegisterEmployee/>} />
-                  <Route path="/registerCharge" element={<RegisterCharge/>}/>
-                  <Route path="/editCharges/:id" element={<EditCharge/>}/>
-                  <Route path='registerPeriods' element={<RegisterPeriods/>}/>
-                  <Route path='registerRates/:id' element={<RegisterRates/>}/>
-                  <Route path='editRates/:id' element={<EditRates/>}/>
-                  <Route path='/editPeriods/:id' element={<EditPeriods/>}/>
-                  <Route path="/adminEmployee" element={<AdminDashboardEmployee/>} />
-                  <Route path="/registerRatesByEmployee/:id" element={<RegisterRatesByEmployee/>} />
-                  <Route path="/adminEmployeeByContractor/:id" element={<AdminEmployeeByContractor/>} />
-                  <Route path="/editEmployee/:id" element={<EditEmployee/>}/>
-                  <Route path="/reports" element={<Reports/>} />
-                  <Route
-                    path="*"
-                    element={
-                      <main style={{ padding: "1rem" }}>
-                        <p>There's nothing here!</p>
-                      </main>
-                    } />
+                    {
+                      (userData?.id_role === 1) ? <>
+                      <Route path="/admin" element={<AdminDashboard/>} />
+                      <Route path="/registerContractor" element={<RegisterContractors/>} />
+                      <Route path="/editContractors/:id" element={<EditContractors/>} />
+                      <Route path="/registerEmployee" element={<RegisterEmployee/>} />
+                      <Route path="/registerCharge" element={<RegisterCharge/>}/>
+                      <Route path="/editCharges/:id" element={<EditCharge/>}/>
+                      <Route path='registerPeriods' element={<RegisterPeriods/>}/>
+                      <Route path='registerRates/:id' element={<RegisterRates/>}/>
+                      <Route path='editRates/:id' element={<EditRates/>}/>
+                      <Route path='/editPeriods/:id' element={<EditPeriods/>}/>
+                      <Route path="/adminEmployee" element={<AdminDashboardEmployee/>} />
+                      <Route path="/registerRatesByEmployee/:id" element={<RegisterRatesByEmployee/>} />
+                      <Route path="/adminEmployeeByContractor/:id" element={<AdminEmployeeByContractor/>} />
+                      <Route path="/editEmployee/:id" element={<EditEmployee/>}/>
+                      <Route
+                        path="*"
+                        element={
+                          <main style={{ padding: "1rem" }}>
+                            <p>There's nothing here!</p>
+                          </main>
+                        } />
+                      </> : <>
+                      <Route path="/profile" element={<Profile/>} />
+                      </>
+                    }
                   </>
                 }
               </Routes>
             </BrowserRouter>
-          </AuthContext.Provider>
           </>
       }
+        </AuthContext.Provider>
       </ThemeEditorProvider>
       </React.StrictMode>
     </ChakraProvider>

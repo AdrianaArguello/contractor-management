@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 // Custom components
 import DatePicker from "react-datepicker";
+import '../../../style/App.css';
 import AuthLayout from "../../../layouts/themes/auth-layout/auth-layout";
 // Assets
 import illustration from "../../../assets/dashboards/Debit.png";
@@ -60,19 +61,20 @@ export default function RegisterPeriods(){
         icon: 'success',
         confirmButtonText:'Continuar'
       })
+      navigate('/admin')
     })
     .catch(error => {
       console.log(error.response.data.error)
       Swal.fire({
         title: '¡Error!',
-        text: 'No se ha podido registrar correctamente la contratista',
+        text: 'No se ha podido registrar correctamente',
         icon: 'error',
         confirmButtonText: 'Continuar'
       })
     });
   setType('');
   setDateRange('');
-    }
+  }
 
  const goBack = async () => {
   navigate('/Admin');
@@ -144,6 +146,15 @@ return (
               </option>
             )}
           </Select>
+          <FormLabel
+            display='flex'
+            ms='4px'
+            fontSize='sm'
+            fontWeight='500'
+            color={textColor}
+            mb='8px'>
+            Fecha del periodo<Text color={brandStars}>*</Text>
+          </FormLabel>
           <DatePicker
             selectsRange={true}
             startDate={startDate}
@@ -160,6 +171,7 @@ return (
             fontWeight='500'
             w='100%'
             h='50'
+            mt='20px'
             mb='24px'
             type="submit">
             Registrar

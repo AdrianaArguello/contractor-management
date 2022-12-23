@@ -46,7 +46,6 @@ export default function EditEmployee(){
     const [contractor, setContractor] = useState("");
     const [role, setRole] = useState("");
     const [identification, setIdentification] = useState("");
-    // const [dateBirth, setdateBirth] = useState("");
     const [startDate, setStartDate] = useState(new Date());
     const [gender, setGender] = useState("");
     const [phone, setPhone] = useState("");
@@ -72,7 +71,7 @@ export default function EditEmployee(){
           setName(res.employees?.name);
           setLastname(res.employees?.lastname);
           setEmail(res.employees?.email);
-          setPassword('');
+          setPassword(res.employees?.password);
           setCharge(res.employees?.id_charge)
           setContractor(res.employees?.id_contractor)
           setRole(res.employees?.id_role)
@@ -221,7 +220,7 @@ export default function EditEmployee(){
                       fontSize='sm'
                       ms={{ base: "0px", md: "0px" }}
                       type='text'
-                      placeholder='mail@simmmple.com'
+                      placeholder='Nombre del empleado'
                       mb='24px'
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -245,7 +244,7 @@ export default function EditEmployee(){
                       fontSize='sm'
                       ms={{ base: "0px", md: "0px" }}
                       type='text'
-                      placeholder='mail@simmmple.com'
+                      placeholder='Segundo nombre del empleado'
                       mb='24px'
                       fontWeight='500'
                       value={lastname}
@@ -273,7 +272,7 @@ export default function EditEmployee(){
                       fontSize='sm'
                       ms={{ base: "0px", md: "0px" }}
                       type='text'
-                      placeholder='mail@simmmple.com'
+                      placeholder='Cedula del empleado'
                       mb='24px'
                       fontWeight='500'
                       size='lg'
@@ -297,7 +296,7 @@ export default function EditEmployee(){
                       fontSize='sm'
                       ms={{ base: "0px", md: "0px" }}
                       type='email'
-                      placeholder='mail@simmmple.com'
+                      placeholder='ejemplo@gmail.com'
                       mb='24px'
                       fontWeight='500'
                       value={email}
@@ -369,7 +368,7 @@ export default function EditEmployee(){
                   fontSize='sm'
                   ms={{ base: "0px", md: "0px" }}
                   type='text'
-                  placeholder='mail@simmmple.com'
+                  placeholder='+5815454496'
                   mb='24px'
                   fontWeight='500'
                   size='lg'
@@ -393,7 +392,7 @@ export default function EditEmployee(){
                   fontSize='sm'
                   ms={{ base: "0px", md: "0px" }}
                   type='text'
-                  placeholder='mail@simmmple.com'
+                  placeholder='Av. la limpia'
                   mb='24px'
                   fontWeight='500'
                   value={address}
@@ -466,7 +465,9 @@ export default function EditEmployee(){
                   </Box>
                 </Flex>
                 <Spacer />
-                <FormLabel
+                <Flex w='100%' gap={2}>
+                  <Box w='50%'>
+                  <FormLabel
                   display='flex'
                   ms='4px'
                   fontSize='sm'
@@ -494,6 +495,29 @@ export default function EditEmployee(){
                     </option>
                   ): ''}
                 </Select>
+                  </Box>
+                  <Box w='50%'>
+                    <FormLabel
+                      display='flex'
+                      ms='4px'
+                      fontSize='sm'
+                      fontWeight='500'
+                      color={textColor}
+                      mb='8px'>
+                      Contraseña<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Input
+                      isRequired={true}
+                      variant='auth'
+                      fontSize='sm'
+                      ms={{ base: "0px", md: "0px" }}
+                      type='text'
+                      mb='24px'
+                      onChange={(e) => setPassword(e.target.value)}
+                      fontWeight='500'
+                      size='md'/>
+                  </Box>
+                </Flex>
                 <Button
                   fontSize='sm'
                   variant='brand'

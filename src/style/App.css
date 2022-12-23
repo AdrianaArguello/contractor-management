@@ -14,6 +14,18 @@ option {
 
 @media (min-width: 750px) {
   .banner{
-    height: 67vh;
+    height: 75vh;
+    width: 100%;
   }
+}
+
+.react-datepicker-wrapper,
+.react-datepicker__input-container,
+.react-datepicker__input-container input {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border-radius: 3px;
+    height: 39px;
+    border: 0.1px solid #e2e8f0;
 }
